@@ -1,10 +1,14 @@
 #Libraries
 library(dplyr)
+
 #Set the working directory
-setwd("//wsl.localhost/Ubuntu/home/mertbarut/42analytics")
+# setwd("//wsl.localhost/Ubuntu/home/mertbarut/42analytics")
 
 # This .r file imports and manipulates all .csv files, 
 # and produces a complete .csv file in data/csv named data_complete.csv 
+
+# Student IDs: 83398 - 88141
+
 
 # Import the data
 {
@@ -68,7 +72,8 @@ setwd("//wsl.localhost/Ubuntu/home/mertbarut/42analytics")
 	#?# Achievements
 	#?# Achievements users
 	#?# Campus users activities
-	#?# Evaluations
+	### Evaluations
+	evaluations = read.csv("data/csv/evaluations.csv")
 	#?# Events users
 }
 # Base merge operations
@@ -104,6 +109,9 @@ setwd("//wsl.localhost/Ubuntu/home/mertbarut/42analytics")
 	cursus_users <- cursus_users %>%
 	  select(id.y, level, login, begin_at, end_at) %>%
 	  rename(id_user = id.y)
+  evaluations <- evaluations %>%
+    select(id_user, evals_coded, 8:23, 25:38, 40:51, 53:64, 66:81, 83:92, 94:99, 101:110, 112:117, 119:126, 128:131, 128:139, 141:148, 150:151, 153:154) %>%
+    rename()
 	a00 <- a00 %>%
 	  select(id.y, occurrence, final_mark, status, validated., current_team_id, marked, marked_at, created_at.x, updated_at.x, login) %>%
 	  rename(id_user = id.y, retries = occurrence, valid = status, validated = validated., team_id = current_team_id, begin_at = created_at.x, end_at = updated_at.x)
@@ -236,6 +244,8 @@ cursus_users = cursus_users[!duplicated(cursus_users), ]
 cursus_users <- full_join(cursus_users, heilbronn_students[, c(3, 18)], by = "login", suffix = c("", ".h"))
 cursus_users <- full_join(cursus_users, wolfsburg_students[, c(3, 18)], by = "login", suffix = c("", ".w"))
 cursus_users <- cursus_users %>% mutate(Student = case_when((cursus_users$grade == "Learner" | cursus_users$grade.w == "Learner") ~ "Yes", (is.na(cursus_users$grade.w) == TRUE) & (is.na(cursus_users$grade) == TRUE) ~ "No"))
+# Joined evaluators with those who was evaluated
+cursus_users <- full_join(cursus_users, evaluations, by = "id_user", suffix = c("", ""))
 # Mutate operations
 ### Campuses
 {
@@ -300,8 +310,32 @@ cursus_users <- cursus_users %>%
   cursus_users <- cursus_users %>% mutate(e01_validated = case_when(cursus_users$e01_validated == 1 ~ 1, is.na(cursus_users$e01_validated) == TRUE ~ 0))
   cursus_users <- cursus_users %>% mutate(e02_validated = case_when(cursus_users$e02_validated == 1 ~ 1, is.na(cursus_users$e02_validated) == TRUE ~ 0))
 }
+### All project tries (first attempt + reattempts) - except a00
+{
+  cursus_users <- cursus_users %>% mutate(s00_retries = case_when(cursus_users$s00_team_id != 0 ~ s00_retries + 1, cursus_users$s00_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(s01_retries = case_when(cursus_users$s01_team_id != 0 ~ s01_retries + 1, cursus_users$s01_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c00_retries = case_when(cursus_users$c00_team_id != 0 ~ c00_retries + 1, cursus_users$c00_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c01_retries = case_when(cursus_users$c01_team_id != 0 ~ c01_retries + 1, cursus_users$c01_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c02_retries = case_when(cursus_users$c02_team_id != 0 ~ c02_retries + 1, cursus_users$c02_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c03_retries = case_when(cursus_users$c03_team_id != 0 ~ c03_retries + 1, cursus_users$c03_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c04_retries = case_when(cursus_users$c04_team_id != 0 ~ c04_retries + 1, cursus_users$c04_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c05_retries = case_when(cursus_users$c05_team_id != 0 ~ c05_retries + 1, cursus_users$c05_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c06_retries = case_when(cursus_users$c06_team_id != 0 ~ c06_retries + 1, cursus_users$c06_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c07_retries = case_when(cursus_users$c07_team_id != 0 ~ c07_retries + 1, cursus_users$c07_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c08_retries = case_when(cursus_users$c08_team_id != 0 ~ c08_retries + 1, cursus_users$c08_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c09_retries = case_when(cursus_users$c09_team_id != 0 ~ c09_retries + 1, cursus_users$c09_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c10_retries = case_when(cursus_users$c10_team_id != 0 ~ c10_retries + 1, cursus_users$c10_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c11_retries = case_when(cursus_users$c11_team_id != 0 ~ c11_retries + 1, cursus_users$c11_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c12_retries = case_when(cursus_users$c12_team_id != 0 ~ c12_retries + 1, cursus_users$c12_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(c13_retries = case_when(cursus_users$c13_team_id != 0 ~ c13_retries + 1, cursus_users$c13_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(r00_retries = case_when(cursus_users$r00_team_id != 0 ~ r00_retries + 1, cursus_users$r00_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(r01_retries = case_when(cursus_users$r01_team_id != 0 ~ r01_retries + 1, cursus_users$r01_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(e00_retries = case_when(cursus_users$e00_team_id != 0 ~ e00_retries + 1, cursus_users$e00_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(e01_retries = case_when(cursus_users$e01_team_id != 0 ~ e01_retries + 1, cursus_users$e01_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(e02_retries = case_when(cursus_users$e02_team_id != 0 ~ e02_retries + 1, cursus_users$e02_team_id == 0 ~ 0))
+}
 ### Replace every NA with 0
-cursus_users[is.na(cursus_users)] <- 0
+#cursus_users[is.na(cursus_users)] <- 0
 ### Create a variable for total attempts & validations
 {
 	cursus_users <- cursus_users %>% mutate(total_attempted = a00_attempted + s00_attempted + s01_attempted + c00_attempted + c01_attempted + 
@@ -327,6 +361,16 @@ cursus_users[is.na(cursus_users)] <- 0
 	cursus_users <- cursus_users %>% mutate(total_r_validated = r00_validated + r01_validated)
 	cursus_users <- cursus_users %>% mutate(total_e_validated = e00_validated + e01_validated + e02_validated)
 }
+### All project tries
+cursus_users <- cursus_users %>% mutate(total_tries = s00_retries + s01_retries + c00_retries + c01_retries + 
+                                          c02_retries + c03_retries + c04_retries + c05_retries + c06_retries + 
+                                          c07_retries + c08_retries + c09_retries + c10_retries + c11_retries + 
+                                          c12_retries + c13_retries + r00_retries + r01_retries + e00_retries + 
+                                          e01_retries + e02_retries)
+### Evaluations
+
+
+
 ### Assign campus to users
 cursus_users <- full_join(cursus_users, heilbronn_users[,2:7], by = "login", suffix = c("", ""))
 cursus_users$campus[is.na(cursus_users$campus)] <- "Wolfsburg"

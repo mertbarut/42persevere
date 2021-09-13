@@ -123,6 +123,14 @@ c04_peers_03 <- network_data %>% group_by(id_user, login, c04_peer03) %>% summar
 c04_peers_04 <- network_data %>% group_by(id_user, login, c04_peer04) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer04)
 c04_peers_05 <- network_data %>% group_by(id_user, login, c04_peer05) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer05)
 c04_peers_06 <- network_data %>% group_by(id_user, login, c04_peer06) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer06)
+c04_peers_07 <- network_data %>% group_by(id_user, login, c04_peer07) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer07)
+c04_peers_08 <- network_data %>% group_by(id_user, login, c04_peer08) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer08)
+c04_peers_09 <- network_data %>% group_by(id_user, login, c04_peer09) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer09)
+c04_peers_10 <- network_data %>% group_by(id_user, login, c04_peer10) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer10)
+c04_peers_11 <- network_data %>% group_by(id_user, login, c04_peer11) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer11)
+c04_peers_12 <- network_data %>% group_by(id_user, login, c04_peer12) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer12)
+c04_peers_13 <- network_data %>% group_by(id_user, login, c04_peer13) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer13)
+c04_peers_14 <- network_data %>% group_by(id_user, login, c04_peer14) %>% summarise(project = "c04") %>% ungroup() %>% rename(dest = login, src = c04_peer14)
 
 # c05
 
@@ -201,7 +209,7 @@ peers <- bind_rows(s00_peers_01, s00_peers_02, s00_peers_03, s00_peers_04, s00_p
 				   c01_peers_01, c01_peers_02, c01_peers_03, c01_peers_04, c01_peers_05, c01_peers_06, c01_peers_07, c01_peers_08, c01_peers_09, c01_peers_10, c01_peers_11, c01_peers_12,
 				   c02_peers_01, c02_peers_02, c02_peers_03, c02_peers_04, c02_peers_05, c02_peers_06, c02_peers_07, c02_peers_08, c02_peers_09, c02_peers_10, c02_peers_11, c02_peers_12, c02_peers_13, c02_peers_14, c02_peers_15, c02_peers_16,
 				   c03_peers_01, c03_peers_02, c03_peers_03, c03_peers_04, c03_peers_05, c03_peers_06, c03_peers_07, c03_peers_08, c03_peers_09, c03_peers_10,
-				   c04_peers_01, c04_peers_02, c04_peers_03, c04_peers_04, c04_peers_05, c04_peers_06,
+				   c04_peers_01, c04_peers_02, c04_peers_03, c04_peers_04, c04_peers_05, c04_peers_06, c04_peers_07, c04_peers_08, c04_peers_09, c04_peers_10, c04_peers_11, c04_peers_12, c04_peers_13, c04_peers_14,
 				   c05_peers_01, c05_peers_02, c05_peers_03, c05_peers_04, c05_peers_05, c05_peers_06, c05_peers_07, c05_peers_08, c05_peers_09, c05_peers_10,
 				   c06_peers_01, c06_peers_02, c06_peers_03, c06_peers_04, c06_peers_05, c06_peers_06,
 				   c07_peers_01, c07_peers_02, c07_peers_03, c07_peers_04, c07_peers_05, c07_peers_06, c07_peers_07, c07_peers_08,

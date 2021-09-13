@@ -9,7 +9,6 @@ library(dplyr)
 
 # Student IDs: 83398 - 88141
 
-
 # Import the data
 {
 	### Users in specific campus (everyone who attended the basecamp grouped by the campus)
@@ -69,12 +68,50 @@ library(dplyr)
 	e00_users_id = read.csv("data/csv/e00_users.csv")
 	e01_users_id = read.csv("data/csv/e01_users.csv")
 	e02_users_id = read.csv("data/csv/e02_users.csv")
-	#?# Achievements
-	#?# Achievements users
-	#?# Campus users activities
+	### Achievements
+	achievements = read.csv("data/csv/achievements.csv")
+	### Achievements users
+	achievements_users_330 = read.csv('data/csv/achievements_users_330.csv')
+	achievements_users_331 = read.csv('data/csv/achievements_users_331.csv')
+	achievements_users_332 = read.csv('data/csv/achievements_users_332.csv')
+	achievements_users_333 = read.csv('data/csv/achievements_users_333.csv')
+	achievements_users_334 = read.csv('data/csv/achievements_users_334.csv')
+	achievements_users_335 = read.csv('data/csv/achievements_users_335.csv')
+	achievements_users_336 = read.csv('data/csv/achievements_users_336.csv')
+	achievements_users_337 = read.csv('data/csv/achievements_users_337.csv')
+	achievements_users_338 = read.csv('data/csv/achievements_users_338.csv')
+	achievements_users_339 = read.csv('data/csv/achievements_users_339.csv')
+	achievements_users_340 = read.csv('data/csv/achievements_users_340.csv')
+	achievements_users_341 = read.csv('data/csv/achievements_users_341.csv')
+	achievements_users_342 = read.csv('data/csv/achievements_users_342.csv')
+	achievements_users_343 = read.csv('data/csv/achievements_users_343.csv')
+	achievements_users_344 = read.csv('data/csv/achievements_users_344.csv')
+	achievements_users_345 = read.csv('data/csv/achievements_users_345.csv')
+	achievements_users_347 = read.csv('data/csv/achievements_users_347.csv')
+	achievements_users_348 = read.csv('data/csv/achievements_users_348.csv')
+	achievements_users_353 = read.csv('data/csv/achievements_users_353.csv')
+	achievements_users_354 = read.csv('data/csv/achievements_users_354.csv')
+	achievements_users_355 = read.csv('data/csv/achievements_users_355.csv')
+	achievements_users_356 = read.csv('data/csv/achievements_users_356.csv')
+	achievements_users_357 = read.csv('data/csv/achievements_users_357.csv')
+	achievements_users_358 = read.csv('data/csv/achievements_users_358.csv')
+	achievements_users_359 = read.csv('data/csv/achievements_users_359.csv')
+	achievements_users_360 = read.csv('data/csv/achievements_users_360.csv')
+	achievements_users_361 = read.csv('data/csv/achievements_users_361.csv')
+	achievements_users_362 = read.csv('data/csv/achievements_users_362.csv')
+	achievements_users_363 = read.csv('data/csv/achievements_users_363.csv')
+	achievements_users_364 = read.csv('data/csv/achievements_users_364.csv')
+	achievements_users_365 = read.csv('data/csv/achievements_users_365.csv')
+	achievements_users_366 = read.csv('data/csv/achievements_users_366.csv')
+	achievements_users_367 = read.csv('data/csv/achievements_users_367.csv')
+	achievements_users_368 = read.csv('data/csv/achievements_users_368.csv')
+	achievements_users_369 = read.csv('data/csv/achievements_users_369.csv')
+	achievements_users_374 = read.csv('data/csv/achievements_users_374.csv')
+	achievements_users_375 = read.csv('data/csv/achievements_users_375.csv')
+	achievements_users_376 = read.csv('data/csv/achievements_users_376.csv')
+	achievements_users_438 = read.csv('data/csv/achievements_users_438.csv')
 	### Evaluations
 	evaluations = read.csv("data/csv/evaluations.csv")
-	#?# Events users
 }
 # Base merge operations
 {
@@ -110,8 +147,7 @@ library(dplyr)
 	  select(id.y, level, login, begin_at, end_at) %>%
 	  rename(id_user = id.y)
   evaluations <- evaluations %>%
-    select(id_user, evals_coded, 8:23, 25:38, 40:51, 53:64, 66:81, 83:92, 94:99, 101:110, 112:117, 119:126, 128:131, 128:139, 141:148, 150:151, 153:154) %>%
-    rename()
+    select(id_user, contains("peer"))
 	a00 <- a00 %>%
 	  select(id.y, occurrence, final_mark, status, validated., current_team_id, marked, marked_at, created_at.x, updated_at.x, login) %>%
 	  rename(id_user = id.y, retries = occurrence, valid = status, validated = validated., team_id = current_team_id, begin_at = created_at.x, end_at = updated_at.x)
@@ -178,6 +214,47 @@ library(dplyr)
 	e02 <- e02 %>%
 	  select(id.y, occurrence, final_mark, status, validated., current_team_id, marked, marked_at, created_at.x, updated_at.x, login) %>%
 	  rename(id_user = id.y, retries = occurrence, valid = status, validated = validated., team_id = current_team_id, begin_at = created_at.x, end_at = updated_at.x)
+	achievements <- achievements %>%
+	  select(id, name, description, tier, kind, campus)
+	achievements_users_330 <- achievements_users_330 %>% select(achievement_id, user_id, login)
+	achievements_users_331 <- achievements_users_331 %>% select(achievement_id, user_id, login)
+	achievements_users_332 <- achievements_users_332 %>% select(achievement_id, user_id, login)
+	achievements_users_333 <- achievements_users_333 %>% select(achievement_id, user_id, login)
+	achievements_users_334 <- achievements_users_334 %>% select(achievement_id, user_id, login)
+	achievements_users_335 <- achievements_users_335 %>% select(achievement_id, user_id, login)
+	achievements_users_336 <- achievements_users_336 %>% select(achievement_id, user_id, login)
+	achievements_users_337 <- achievements_users_337 %>% select(achievement_id, user_id, login)
+	achievements_users_338 <- achievements_users_338 %>% select(achievement_id, user_id, login)
+	achievements_users_339 <- achievements_users_339 %>% select(achievement_id, user_id, login)
+	achievements_users_340 <- achievements_users_340 %>% select(achievement_id, user_id, login)
+	achievements_users_341 <- achievements_users_341 %>% select(achievement_id, user_id, login)
+	achievements_users_342 <- achievements_users_342 %>% select(achievement_id, user_id, login)
+	achievements_users_343 <- achievements_users_343 %>% select(achievement_id, user_id, login)
+	achievements_users_344 <- achievements_users_344 %>% select(achievement_id, user_id, login)
+	achievements_users_345 <- achievements_users_345 %>% select(achievement_id, user_id, login)
+	achievements_users_347 <- achievements_users_347 %>% select(achievement_id, user_id, login)
+	achievements_users_348 <- achievements_users_348 %>% select(achievement_id, user_id, login)
+	achievements_users_353 <- achievements_users_353 %>% select(achievement_id, user_id, login)
+	achievements_users_354 <- achievements_users_354 %>% select(achievement_id, user_id, login)
+	achievements_users_355 <- achievements_users_355 %>% select(achievement_id, user_id, login)
+	achievements_users_356 <- achievements_users_356 %>% select(achievement_id, user_id, login)
+	achievements_users_357 <- achievements_users_357 %>% select(achievement_id, user_id, login)
+	achievements_users_358 <- achievements_users_358 %>% select(achievement_id, user_id, login)
+	achievements_users_359 <- achievements_users_359 %>% select(achievement_id, user_id, login)
+	achievements_users_360 <- achievements_users_360 %>% select(achievement_id, user_id, login)
+	achievements_users_361 <- achievements_users_361 %>% select(achievement_id, user_id, login)
+	achievements_users_362 <- achievements_users_362 %>% select(achievement_id, user_id, login)
+	achievements_users_363 <- achievements_users_363 %>% select(achievement_id, user_id, login)
+	achievements_users_364 <- achievements_users_364 %>% select(achievement_id, user_id, login)
+	achievements_users_365 <- achievements_users_365 %>% select(achievement_id, user_id, login)
+	achievements_users_366 <- achievements_users_366 %>% select(achievement_id, user_id, login)
+	achievements_users_367 <- achievements_users_367 %>% select(achievement_id, user_id, login)
+	achievements_users_368 <- achievements_users_368 %>% select(achievement_id, user_id, login)
+	achievements_users_369 <- achievements_users_369 %>% select(achievement_id, user_id, login)
+	achievements_users_374 <- achievements_users_374 %>% select(achievement_id, user_id, login)
+	achievements_users_375 <- achievements_users_375 %>% select(achievement_id, user_id, login)
+	achievements_users_376 <- achievements_users_376 %>% select(achievement_id, user_id, login)
+	achievements_users_438 <- achievements_users_438 %>% select(achievement_id, user_id, login)
 }
 # Prefix columns with project names
 {
@@ -243,7 +320,8 @@ cursus_users = cursus_users[!duplicated(cursus_users), ]
 # Join every student data specific to campuses to cursus_users
 cursus_users <- full_join(cursus_users, heilbronn_students[, c(3, 18)], by = "login", suffix = c("", ".h"))
 cursus_users <- full_join(cursus_users, wolfsburg_students[, c(3, 18)], by = "login", suffix = c("", ".w"))
-cursus_users <- cursus_users %>% mutate(Student = case_when((cursus_users$grade == "Learner" | cursus_users$grade.w == "Learner") ~ "Yes", (is.na(cursus_users$grade.w) == TRUE) & (is.na(cursus_users$grade) == TRUE) ~ "No"))
+cursus_users <- cursus_users %>% mutate(Student = case_when((cursus_users$grade == "Learner" | cursus_users$grade.w == "Learner") ~ "Yes",
+                                                            (is.na(cursus_users$grade.w) == TRUE) & (is.na(cursus_users$grade) == TRUE) ~ "No"))
 # Joined evaluators with those who was evaluated
 cursus_users <- full_join(cursus_users, evaluations, by = "id_user", suffix = c("", ""))
 # Mutate operations
@@ -285,57 +363,77 @@ cursus_users <- cursus_users %>%
 	cursus_users <- cursus_users %>% mutate(e01_attempted = case_when(cursus_users$e01_valid == "finished" ~ 1, is.na(cursus_users$e01_valid) == TRUE ~ 0))
 	cursus_users <- cursus_users %>% mutate(e02_attempted = case_when(cursus_users$e02_valid == "finished" ~ 1, is.na(cursus_users$e02_valid) == TRUE ~ 0))
   }
+cursus_users$a00_attempted[is.na(cursus_users$a00_attempted)] <- 0
+cursus_users$s00_attempted[is.na(cursus_users$s00_attempted)] <- 0
+cursus_users$s01_attempted[is.na(cursus_users$s01_attempted)] <- 0
+cursus_users$c00_attempted[is.na(cursus_users$c00_attempted)] <- 0
+cursus_users$c01_attempted[is.na(cursus_users$c01_attempted)] <- 0
+cursus_users$c02_attempted[is.na(cursus_users$c02_attempted)] <- 0
+cursus_users$c03_attempted[is.na(cursus_users$c03_attempted)] <- 0
+cursus_users$c04_attempted[is.na(cursus_users$c04_attempted)] <- 0
+cursus_users$c05_attempted[is.na(cursus_users$c05_attempted)] <- 0
+cursus_users$c06_attempted[is.na(cursus_users$c06_attempted)] <- 0
+cursus_users$c07_attempted[is.na(cursus_users$c07_attempted)] <- 0
+cursus_users$c08_attempted[is.na(cursus_users$c08_attempted)] <- 0
+cursus_users$c09_attempted[is.na(cursus_users$c09_attempted)] <- 0
+cursus_users$c10_attempted[is.na(cursus_users$c10_attempted)] <- 0
+cursus_users$c11_attempted[is.na(cursus_users$c11_attempted)] <- 0
+cursus_users$c12_attempted[is.na(cursus_users$c12_attempted)] <- 0
+cursus_users$c13_attempted[is.na(cursus_users$c13_attempted)] <- 0
+cursus_users$r00_attempted[is.na(cursus_users$r00_attempted)] <- 0
+cursus_users$r01_attempted[is.na(cursus_users$r01_attempted)] <- 0
+cursus_users$e00_attempted[is.na(cursus_users$e00_attempted)] <- 0
+cursus_users$e01_attempted[is.na(cursus_users$e01_attempted)] <- 0
+cursus_users$e02_attempted[is.na(cursus_users$e02_attempted)] <- 0
 ### All project validations (passes)
 {
-  cursus_users <- cursus_users %>% mutate(a00_validated = case_when(cursus_users$a00_validated == 1 ~ 1, is.na(cursus_users$a00_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(s00_validated = case_when(cursus_users$s00_validated == 1 ~ 1, is.na(cursus_users$s00_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(s01_validated = case_when(cursus_users$s01_validated == 1 ~ 1, is.na(cursus_users$s01_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c00_validated = case_when(cursus_users$c00_validated == 1 ~ 1, is.na(cursus_users$c00_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c01_validated = case_when(cursus_users$c01_validated == 1 ~ 1, is.na(cursus_users$c01_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c02_validated = case_when(cursus_users$c02_validated == 1 ~ 1, is.na(cursus_users$c02_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c03_validated = case_when(cursus_users$c03_validated == 1 ~ 1, is.na(cursus_users$c03_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c04_validated = case_when(cursus_users$c04_validated == 1 ~ 1, is.na(cursus_users$c04_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c05_validated = case_when(cursus_users$c05_validated == 1 ~ 1, is.na(cursus_users$c05_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c06_validated = case_when(cursus_users$c06_validated == 1 ~ 1, is.na(cursus_users$c06_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c07_validated = case_when(cursus_users$c07_validated == 1 ~ 1, is.na(cursus_users$c07_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c08_validated = case_when(cursus_users$c08_validated == 1 ~ 1, is.na(cursus_users$c08_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c09_validated = case_when(cursus_users$c09_validated == 1 ~ 1, is.na(cursus_users$c09_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c10_validated = case_when(cursus_users$c10_validated == 1 ~ 1, is.na(cursus_users$c10_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c11_validated = case_when(cursus_users$c11_validated == 1 ~ 1, is.na(cursus_users$c11_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c12_validated = case_when(cursus_users$c12_validated == 1 ~ 1, is.na(cursus_users$c12_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(c13_validated = case_when(cursus_users$c13_validated == 1 ~ 1, is.na(cursus_users$c13_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(r00_validated = case_when(cursus_users$r00_validated == 1 ~ 1, is.na(cursus_users$r00_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(r01_validated = case_when(cursus_users$r01_validated == 1 ~ 1, is.na(cursus_users$r01_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(e00_validated = case_when(cursus_users$e00_validated == 1 ~ 1, is.na(cursus_users$e00_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(e01_validated = case_when(cursus_users$e01_validated == 1 ~ 1, is.na(cursus_users$e01_validated) == TRUE ~ 0))
-  cursus_users <- cursus_users %>% mutate(e02_validated = case_when(cursus_users$e02_validated == 1 ~ 1, is.na(cursus_users$e02_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(a00_validated = case_when(cursus_users$a00_validated == 1 ~ 1, cursus_users$a00_validated != 1 | is.na(cursus_users$a00_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(s00_validated = case_when(cursus_users$s00_validated == 1 ~ 1, cursus_users$s00_validated != 1 | is.na(cursus_users$s00_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(s01_validated = case_when(cursus_users$s01_validated == 1 ~ 1, cursus_users$s01_validated != 1 | is.na(cursus_users$s01_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c00_validated = case_when(cursus_users$c00_validated == 1 ~ 1, cursus_users$c00_validated != 1 | is.na(cursus_users$c00_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c01_validated = case_when(cursus_users$c01_validated == 1 ~ 1, cursus_users$c01_validated != 1 | is.na(cursus_users$c01_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c02_validated = case_when(cursus_users$c02_validated == 1 ~ 1, cursus_users$c02_validated != 1 | is.na(cursus_users$c02_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c03_validated = case_when(cursus_users$c03_validated == 1 ~ 1, cursus_users$c03_validated != 1 | is.na(cursus_users$c03_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c04_validated = case_when(cursus_users$c04_validated == 1 ~ 1, cursus_users$c04_validated != 1 | is.na(cursus_users$c04_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c05_validated = case_when(cursus_users$c05_validated == 1 ~ 1, cursus_users$c05_validated != 1 | is.na(cursus_users$c05_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c06_validated = case_when(cursus_users$c06_validated == 1 ~ 1, cursus_users$c06_validated != 1 | is.na(cursus_users$c06_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c07_validated = case_when(cursus_users$c07_validated == 1 ~ 1, cursus_users$c07_validated != 1 | is.na(cursus_users$c07_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c08_validated = case_when(cursus_users$c08_validated == 1 ~ 1, cursus_users$c08_validated != 1 | is.na(cursus_users$c08_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c09_validated = case_when(cursus_users$c09_validated == 1 ~ 1, cursus_users$c09_validated != 1 | is.na(cursus_users$c09_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c10_validated = case_when(cursus_users$c10_validated == 1 ~ 1, cursus_users$c10_validated != 1 | is.na(cursus_users$c10_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c11_validated = case_when(cursus_users$c11_validated == 1 ~ 1, cursus_users$c11_validated != 1 | is.na(cursus_users$c11_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c12_validated = case_when(cursus_users$c12_validated == 1 ~ 1, cursus_users$c12_validated != 1 | is.na(cursus_users$c12_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c13_validated = case_when(cursus_users$c13_validated == 1 ~ 1, cursus_users$c13_validated != 1 | is.na(cursus_users$c13_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(r00_validated = case_when(cursus_users$r00_validated == 1 ~ 1, cursus_users$r00_validated != 1 | is.na(cursus_users$r00_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(r01_validated = case_when(cursus_users$r01_validated == 1 ~ 1, cursus_users$r01_validated != 1 | is.na(cursus_users$r01_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(e00_validated = case_when(cursus_users$e00_validated == 1 ~ 1, cursus_users$e00_validated != 1 | is.na(cursus_users$e00_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(e01_validated = case_when(cursus_users$e01_validated == 1 ~ 1, cursus_users$e01_validated != 1 | is.na(cursus_users$e01_validated) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(e02_validated = case_when(cursus_users$e02_validated == 1 ~ 1, cursus_users$e02_validated != 1 | is.na(cursus_users$e02_validated) == TRUE ~ 0))
 }
 ### All project tries (first attempt + reattempts) - except a00
 {
-  cursus_users <- cursus_users %>% mutate(s00_retries = case_when(cursus_users$s00_team_id != 0 ~ s00_retries + 1, cursus_users$s00_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(s01_retries = case_when(cursus_users$s01_team_id != 0 ~ s01_retries + 1, cursus_users$s01_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c00_retries = case_when(cursus_users$c00_team_id != 0 ~ c00_retries + 1, cursus_users$c00_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c01_retries = case_when(cursus_users$c01_team_id != 0 ~ c01_retries + 1, cursus_users$c01_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c02_retries = case_when(cursus_users$c02_team_id != 0 ~ c02_retries + 1, cursus_users$c02_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c03_retries = case_when(cursus_users$c03_team_id != 0 ~ c03_retries + 1, cursus_users$c03_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c04_retries = case_when(cursus_users$c04_team_id != 0 ~ c04_retries + 1, cursus_users$c04_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c05_retries = case_when(cursus_users$c05_team_id != 0 ~ c05_retries + 1, cursus_users$c05_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c06_retries = case_when(cursus_users$c06_team_id != 0 ~ c06_retries + 1, cursus_users$c06_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c07_retries = case_when(cursus_users$c07_team_id != 0 ~ c07_retries + 1, cursus_users$c07_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c08_retries = case_when(cursus_users$c08_team_id != 0 ~ c08_retries + 1, cursus_users$c08_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c09_retries = case_when(cursus_users$c09_team_id != 0 ~ c09_retries + 1, cursus_users$c09_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c10_retries = case_when(cursus_users$c10_team_id != 0 ~ c10_retries + 1, cursus_users$c10_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c11_retries = case_when(cursus_users$c11_team_id != 0 ~ c11_retries + 1, cursus_users$c11_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c12_retries = case_when(cursus_users$c12_team_id != 0 ~ c12_retries + 1, cursus_users$c12_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(c13_retries = case_when(cursus_users$c13_team_id != 0 ~ c13_retries + 1, cursus_users$c13_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(r00_retries = case_when(cursus_users$r00_team_id != 0 ~ r00_retries + 1, cursus_users$r00_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(r01_retries = case_when(cursus_users$r01_team_id != 0 ~ r01_retries + 1, cursus_users$r01_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(e00_retries = case_when(cursus_users$e00_team_id != 0 ~ e00_retries + 1, cursus_users$e00_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(e01_retries = case_when(cursus_users$e01_team_id != 0 ~ e01_retries + 1, cursus_users$e01_team_id == 0 ~ 0))
-  cursus_users <- cursus_users %>% mutate(e02_retries = case_when(cursus_users$e02_team_id != 0 ~ e02_retries + 1, cursus_users$e02_team_id == 0 ~ 0))
+  cursus_users <- cursus_users %>% mutate(s00_retries = case_when(cursus_users$s00_team_id != 0 ~ s00_retries + 1, is.na(cursus_users$s00_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(s01_retries = case_when(cursus_users$s01_team_id != 0 ~ s01_retries + 1, is.na(cursus_users$s01_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c00_retries = case_when(cursus_users$c00_team_id != 0 ~ c00_retries + 1, is.na(cursus_users$c00_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c01_retries = case_when(cursus_users$c01_team_id != 0 ~ c01_retries + 1, is.na(cursus_users$c01_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c02_retries = case_when(cursus_users$c02_team_id != 0 ~ c02_retries + 1, is.na(cursus_users$c02_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c03_retries = case_when(cursus_users$c03_team_id != 0 ~ c03_retries + 1, is.na(cursus_users$c03_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c04_retries = case_when(cursus_users$c04_team_id != 0 ~ c04_retries + 1, is.na(cursus_users$c04_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c05_retries = case_when(cursus_users$c05_team_id != 0 ~ c05_retries + 1, is.na(cursus_users$c05_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c06_retries = case_when(cursus_users$c06_team_id != 0 ~ c06_retries + 1, is.na(cursus_users$c06_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c07_retries = case_when(cursus_users$c07_team_id != 0 ~ c07_retries + 1, is.na(cursus_users$c07_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c08_retries = case_when(cursus_users$c08_team_id != 0 ~ c08_retries + 1, is.na(cursus_users$c08_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c09_retries = case_when(cursus_users$c09_team_id != 0 ~ c09_retries + 1, is.na(cursus_users$c09_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c10_retries = case_when(cursus_users$c10_team_id != 0 ~ c10_retries + 1, is.na(cursus_users$c10_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c11_retries = case_when(cursus_users$c11_team_id != 0 ~ c11_retries + 1, is.na(cursus_users$c11_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c12_retries = case_when(cursus_users$c12_team_id != 0 ~ c12_retries + 1, is.na(cursus_users$c12_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(c13_retries = case_when(cursus_users$c13_team_id != 0 ~ c13_retries + 1, is.na(cursus_users$c13_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(r00_retries = case_when(cursus_users$r00_team_id != 0 ~ r00_retries + 1, is.na(cursus_users$r00_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(r01_retries = case_when(cursus_users$r01_team_id != 0 ~ r01_retries + 1, is.na(cursus_users$r01_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(e00_retries = case_when(cursus_users$e00_team_id != 0 ~ e00_retries + 1, is.na(cursus_users$e00_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(e01_retries = case_when(cursus_users$e01_team_id != 0 ~ e01_retries + 1, is.na(cursus_users$e01_team_id) == TRUE ~ 0))
+  cursus_users <- cursus_users %>% mutate(e02_retries = case_when(cursus_users$e02_team_id != 0 ~ e02_retries + 1, is.na(cursus_users$e02_team_id) == TRUE ~ 0))
 }
-### Replace every NA with 0
-#cursus_users[is.na(cursus_users)] <- 0
 ### Create a variable for total attempts & validations
 {
 	cursus_users <- cursus_users %>% mutate(total_attempted = a00_attempted + s00_attempted + s01_attempted + c00_attempted + c01_attempted + 
@@ -361,16 +459,14 @@ cursus_users <- cursus_users %>%
 	cursus_users <- cursus_users %>% mutate(total_r_validated = r00_validated + r01_validated)
 	cursus_users <- cursus_users %>% mutate(total_e_validated = e00_validated + e01_validated + e02_validated)
 }
+
+
 ### All project tries
 cursus_users <- cursus_users %>% mutate(total_tries = s00_retries + s01_retries + c00_retries + c01_retries + 
                                           c02_retries + c03_retries + c04_retries + c05_retries + c06_retries + 
                                           c07_retries + c08_retries + c09_retries + c10_retries + c11_retries + 
                                           c12_retries + c13_retries + r00_retries + r01_retries + e00_retries + 
                                           e01_retries + e02_retries)
-### Evaluations
-
-
-
 ### Assign campus to users
 cursus_users <- full_join(cursus_users, heilbronn_users[,2:7], by = "login", suffix = c("", ""))
 cursus_users$campus[is.na(cursus_users$campus)] <- "Wolfsburg"
@@ -384,5 +480,457 @@ cursus_users <- cursus_users %>% filter(month != 0)						# These users have non-
 cursus_users <- cursus_users %>% filter(id_user != 84189)				# This user is a staff member; thus is not valid
 cursus_users <- cursus_users %>% filter(level != 0)						# These users did not complete "I accept"; thus are not valid
 cursus_users <- cursus_users %>% distinct(id_user, .keep_all = TRUE)	# Keep only unique users
-# Export as .csv 
+
+# Evaluations
+### s00
+s00_peers_01 <- cursus_users %>% group_by(id_user, login, s00_peer01) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer01)
+s00_peers_02 <- cursus_users %>% group_by(id_user, login, s00_peer02) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer02)
+s00_peers_03 <- cursus_users %>% group_by(id_user, login, s00_peer03) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer03)
+s00_peers_04 <- cursus_users %>% group_by(id_user, login, s00_peer04) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer04)
+s00_peers_05 <- cursus_users %>% group_by(id_user, login, s00_peer05) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer05)
+s00_peers_06 <- cursus_users %>% group_by(id_user, login, s00_peer06) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer06)
+s00_peers_07 <- cursus_users %>% group_by(id_user, login, s00_peer07) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer07)
+s00_peers_08 <- cursus_users %>% group_by(id_user, login, s00_peer08) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer08)
+s00_peers_09 <- cursus_users %>% group_by(id_user, login, s00_peer09) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer09)
+s00_peers_10 <- cursus_users %>% group_by(id_user, login, s00_peer10) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer10)
+s00_peers_11 <- cursus_users %>% group_by(id_user, login, s00_peer11) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer11)
+s00_peers_12 <- cursus_users %>% group_by(id_user, login, s00_peer12) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer12)
+s00_peers_13 <- cursus_users %>% group_by(id_user, login, s00_peer13) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer13)
+s00_peers_14 <- cursus_users %>% group_by(id_user, login, s00_peer14) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer14)
+s00_peers_15 <- cursus_users %>% group_by(id_user, login, s00_peer15) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer15)
+s00_peers_16 <- cursus_users %>% group_by(id_user, login, s00_peer16) %>% summarise(project = "Shell 00") %>% ungroup() %>% rename(dest = login, src = s00_peer16)
+### s01
+s01_peers_01 <- cursus_users %>% group_by(id_user, login, s01_peer01) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer01)
+s01_peers_02 <- cursus_users %>% group_by(id_user, login, s01_peer02) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer02)
+s01_peers_03 <- cursus_users %>% group_by(id_user, login, s01_peer03) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer03)
+s01_peers_04 <- cursus_users %>% group_by(id_user, login, s01_peer04) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer04)
+s01_peers_05 <- cursus_users %>% group_by(id_user, login, s01_peer05) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer05)
+s01_peers_06 <- cursus_users %>% group_by(id_user, login, s01_peer06) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer06)
+s01_peers_07 <- cursus_users %>% group_by(id_user, login, s01_peer07) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer07)
+s01_peers_08 <- cursus_users %>% group_by(id_user, login, s01_peer08) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer08)
+s01_peers_09 <- cursus_users %>% group_by(id_user, login, s01_peer09) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer09)
+s01_peers_10 <- cursus_users %>% group_by(id_user, login, s01_peer10) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer10)
+s01_peers_11 <- cursus_users %>% group_by(id_user, login, s01_peer11) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer11)
+s01_peers_12 <- cursus_users %>% group_by(id_user, login, s01_peer12) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer12)
+s01_peers_13 <- cursus_users %>% group_by(id_user, login, s01_peer13) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer13)
+s01_peers_14 <- cursus_users %>% group_by(id_user, login, s01_peer14) %>% summarise(project = "Shell 01") %>% ungroup() %>% rename(dest = login, src = s01_peer14)
+### c00
+c00_peers_01 <- cursus_users %>% group_by(id_user, login, c00_peer01) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer01)
+c00_peers_02 <- cursus_users %>% group_by(id_user, login, c00_peer02) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer02)
+c00_peers_03 <- cursus_users %>% group_by(id_user, login, c00_peer03) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer03)
+c00_peers_04 <- cursus_users %>% group_by(id_user, login, c00_peer04) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer04)
+c00_peers_05 <- cursus_users %>% group_by(id_user, login, c00_peer05) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer05)
+c00_peers_06 <- cursus_users %>% group_by(id_user, login, c00_peer06) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer06)
+c00_peers_07 <- cursus_users %>% group_by(id_user, login, c00_peer07) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer07)
+c00_peers_08 <- cursus_users %>% group_by(id_user, login, c00_peer08) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer08)
+c00_peers_09 <- cursus_users %>% group_by(id_user, login, c00_peer09) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer09)
+c00_peers_10 <- cursus_users %>% group_by(id_user, login, c00_peer10) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer10)
+c00_peers_11 <- cursus_users %>% group_by(id_user, login, c00_peer11) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer11)
+c00_peers_12 <- cursus_users %>% group_by(id_user, login, c00_peer12) %>% summarise(project = "C 00") %>% ungroup() %>% rename(dest = login, src = c00_peer12)
+### c01
+c01_peers_01 <- cursus_users %>% group_by(id_user, login, c01_peer01) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer01)
+c01_peers_02 <- cursus_users %>% group_by(id_user, login, c01_peer02) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer02)
+c01_peers_03 <- cursus_users %>% group_by(id_user, login, c01_peer03) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer03)
+c01_peers_04 <- cursus_users %>% group_by(id_user, login, c01_peer04) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer04)
+c01_peers_05 <- cursus_users %>% group_by(id_user, login, c01_peer05) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer05)
+c01_peers_06 <- cursus_users %>% group_by(id_user, login, c01_peer06) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer06)
+c01_peers_07 <- cursus_users %>% group_by(id_user, login, c01_peer07) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer07)
+c01_peers_08 <- cursus_users %>% group_by(id_user, login, c01_peer08) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer08)
+c01_peers_09 <- cursus_users %>% group_by(id_user, login, c01_peer09) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer09)
+c01_peers_10 <- cursus_users %>% group_by(id_user, login, c01_peer10) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer10)
+c01_peers_11 <- cursus_users %>% group_by(id_user, login, c01_peer11) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer11)
+c01_peers_12 <- cursus_users %>% group_by(id_user, login, c01_peer12) %>% summarise(project = "C 01") %>% ungroup() %>% rename(dest = login, src = c01_peer12)
+### c02
+c02_peers_01 <- cursus_users %>% group_by(id_user, login, c02_peer01) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer01)
+c02_peers_02 <- cursus_users %>% group_by(id_user, login, c02_peer02) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer02)
+c02_peers_03 <- cursus_users %>% group_by(id_user, login, c02_peer03) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer03)
+c02_peers_04 <- cursus_users %>% group_by(id_user, login, c02_peer04) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer04)
+c02_peers_05 <- cursus_users %>% group_by(id_user, login, c02_peer05) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer05)
+c02_peers_06 <- cursus_users %>% group_by(id_user, login, c02_peer06) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer06)
+c02_peers_07 <- cursus_users %>% group_by(id_user, login, c02_peer07) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer07)
+c02_peers_08 <- cursus_users %>% group_by(id_user, login, c02_peer08) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer08)
+c02_peers_09 <- cursus_users %>% group_by(id_user, login, c02_peer09) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer09)
+c02_peers_10 <- cursus_users %>% group_by(id_user, login, c02_peer10) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer10)
+c02_peers_11 <- cursus_users %>% group_by(id_user, login, c02_peer11) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer11)
+c02_peers_12 <- cursus_users %>% group_by(id_user, login, c02_peer12) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer12)
+c02_peers_13 <- cursus_users %>% group_by(id_user, login, c02_peer13) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer13)
+c02_peers_14 <- cursus_users %>% group_by(id_user, login, c02_peer14) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer14)
+c02_peers_15 <- cursus_users %>% group_by(id_user, login, c02_peer15) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer15)
+c02_peers_16 <- cursus_users %>% group_by(id_user, login, c02_peer16) %>% summarise(project = "C 02") %>% ungroup() %>% rename(dest = login, src = c02_peer16)
+### c03
+c03_peers_01 <- cursus_users %>% group_by(id_user, login, c03_peer01) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer01)
+c03_peers_02 <- cursus_users %>% group_by(id_user, login, c03_peer02) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer02)
+c03_peers_03 <- cursus_users %>% group_by(id_user, login, c03_peer03) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer03)
+c03_peers_04 <- cursus_users %>% group_by(id_user, login, c03_peer04) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer04)
+c03_peers_05 <- cursus_users %>% group_by(id_user, login, c03_peer05) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer05)
+c03_peers_06 <- cursus_users %>% group_by(id_user, login, c03_peer06) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer06)
+c03_peers_07 <- cursus_users %>% group_by(id_user, login, c03_peer07) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer07)
+c03_peers_08 <- cursus_users %>% group_by(id_user, login, c03_peer08) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer08)
+c03_peers_09 <- cursus_users %>% group_by(id_user, login, c03_peer09) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer09)
+c03_peers_10 <- cursus_users %>% group_by(id_user, login, c03_peer10) %>% summarise(project = "C 03") %>% ungroup() %>% rename(dest = login, src = c03_peer10)
+### c04
+c04_peers_01 <- cursus_users %>% group_by(id_user, login, c04_peer01) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer01)
+c04_peers_02 <- cursus_users %>% group_by(id_user, login, c04_peer02) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer02)
+c04_peers_03 <- cursus_users %>% group_by(id_user, login, c04_peer03) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer03)
+c04_peers_04 <- cursus_users %>% group_by(id_user, login, c04_peer04) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer04)
+c04_peers_05 <- cursus_users %>% group_by(id_user, login, c04_peer05) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer05)
+c04_peers_06 <- cursus_users %>% group_by(id_user, login, c04_peer06) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer06)
+c04_peers_07 <- cursus_users %>% group_by(id_user, login, c04_peer07) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer07)
+c04_peers_08 <- cursus_users %>% group_by(id_user, login, c04_peer08) %>% summarise(project = "C 04") %>% ungroup() %>% rename(dest = login, src = c04_peer08)
+### c05
+c05_peers_01 <- cursus_users %>% group_by(id_user, login, c05_peer01) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer01)
+c05_peers_02 <- cursus_users %>% group_by(id_user, login, c05_peer02) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer02)
+c05_peers_03 <- cursus_users %>% group_by(id_user, login, c05_peer03) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer03)
+c05_peers_04 <- cursus_users %>% group_by(id_user, login, c05_peer04) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer04)
+c05_peers_05 <- cursus_users %>% group_by(id_user, login, c05_peer05) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer05)
+c05_peers_06 <- cursus_users %>% group_by(id_user, login, c05_peer06) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer06)
+c05_peers_07 <- cursus_users %>% group_by(id_user, login, c05_peer07) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer07)
+c05_peers_08 <- cursus_users %>% group_by(id_user, login, c05_peer08) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer08)
+c05_peers_09 <- cursus_users %>% group_by(id_user, login, c05_peer09) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer09)
+c05_peers_10 <- cursus_users %>% group_by(id_user, login, c05_peer10) %>% summarise(project = "C 05") %>% ungroup() %>% rename(dest = login, src = c05_peer10)
+### c06
+c06_peers_01 <- cursus_users %>% group_by(id_user, login, c06_peer01) %>% summarise(project = "C 06") %>% ungroup() %>% rename(dest = login, src = c06_peer01)
+c06_peers_02 <- cursus_users %>% group_by(id_user, login, c06_peer02) %>% summarise(project = "C 06") %>% ungroup() %>% rename(dest = login, src = c06_peer02)
+c06_peers_03 <- cursus_users %>% group_by(id_user, login, c06_peer03) %>% summarise(project = "C 06") %>% ungroup() %>% rename(dest = login, src = c06_peer03)
+c06_peers_04 <- cursus_users %>% group_by(id_user, login, c06_peer04) %>% summarise(project = "C 06") %>% ungroup() %>% rename(dest = login, src = c06_peer04)
+c06_peers_05 <- cursus_users %>% group_by(id_user, login, c06_peer05) %>% summarise(project = "C 06") %>% ungroup() %>% rename(dest = login, src = c06_peer05)
+c06_peers_06 <- cursus_users %>% group_by(id_user, login, c06_peer06) %>% summarise(project = "C 06") %>% ungroup() %>% rename(dest = login, src = c06_peer06)
+### c07
+c07_peers_01 <- cursus_users %>% group_by(id_user, login, c07_peer01) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer01)
+c07_peers_02 <- cursus_users %>% group_by(id_user, login, c07_peer02) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer02)
+c07_peers_03 <- cursus_users %>% group_by(id_user, login, c07_peer03) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer03)
+c07_peers_04 <- cursus_users %>% group_by(id_user, login, c07_peer04) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer04)
+c07_peers_05 <- cursus_users %>% group_by(id_user, login, c07_peer05) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer05)
+c07_peers_06 <- cursus_users %>% group_by(id_user, login, c07_peer06) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer06)
+c07_peers_07 <- cursus_users %>% group_by(id_user, login, c07_peer07) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer07)
+c07_peers_08 <- cursus_users %>% group_by(id_user, login, c07_peer08) %>% summarise(project = "C 07") %>% ungroup() %>% rename(dest = login, src = c07_peer08)
+### c08
+c08_peers_01 <- cursus_users %>% group_by(id_user, login, c08_peer01) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer01)
+c08_peers_02 <- cursus_users %>% group_by(id_user, login, c08_peer02) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer02)
+c08_peers_03 <- cursus_users %>% group_by(id_user, login, c08_peer03) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer03)
+c08_peers_04 <- cursus_users %>% group_by(id_user, login, c08_peer04) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer04)
+c08_peers_05 <- cursus_users %>% group_by(id_user, login, c08_peer05) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer05)
+c08_peers_06 <- cursus_users %>% group_by(id_user, login, c08_peer06) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer06)
+c08_peers_07 <- cursus_users %>% group_by(id_user, login, c08_peer07) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer07)
+c08_peers_08 <- cursus_users %>% group_by(id_user, login, c08_peer08) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer08)
+c08_peers_09 <- cursus_users %>% group_by(id_user, login, c08_peer09) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer09)
+c08_peers_10 <- cursus_users %>% group_by(id_user, login, c08_peer10) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer10)
+c08_peers_11 <- cursus_users %>% group_by(id_user, login, c08_peer11) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer11)
+c08_peers_12 <- cursus_users %>% group_by(id_user, login, c08_peer12) %>% summarise(project = "C 08") %>% ungroup() %>% rename(dest = login, src = c08_peer12)
+### c09
+c09_peers_01 <- cursus_users %>% group_by(id_user, login, c09_peer01) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer01)
+c09_peers_02 <- cursus_users %>% group_by(id_user, login, c09_peer02) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer02)
+c09_peers_03 <- cursus_users %>% group_by(id_user, login, c09_peer03) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer03)
+c09_peers_04 <- cursus_users %>% group_by(id_user, login, c09_peer04) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer04)
+c09_peers_05 <- cursus_users %>% group_by(id_user, login, c09_peer05) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer05)
+c09_peers_06 <- cursus_users %>% group_by(id_user, login, c09_peer06) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer06)
+c09_peers_07 <- cursus_users %>% group_by(id_user, login, c09_peer07) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer07)
+c09_peers_08 <- cursus_users %>% group_by(id_user, login, c09_peer08) %>% summarise(project = "C 09") %>% ungroup() %>% rename(dest = login, src = c09_peer08)
+### c10
+c10_peers_01 <- cursus_users %>% group_by(id_user, login, c10_peer01) %>% summarise(project = "C 10") %>% ungroup() %>% rename(dest = login, src = c10_peer01)
+c10_peers_02 <- cursus_users %>% group_by(id_user, login, c10_peer02) %>% summarise(project = "C 10") %>% ungroup() %>% rename(dest = login, src = c10_peer02)
+### c11
+c11_peers_01 <- cursus_users %>% group_by(id_user, login, c11_peer01) %>% summarise(project = "C 11") %>% ungroup() %>% rename(dest = login, src = c11_peer01)
+c11_peers_02 <- cursus_users %>% group_by(id_user, login, c11_peer02) %>% summarise(project = "C 11") %>% ungroup() %>% rename(dest = login, src = c11_peer02)
+
+### bind every evaluation
+peers <- bind_rows(s00_peers_01, s00_peers_02, s00_peers_03, s00_peers_04, s00_peers_05, s00_peers_06, s00_peers_07, s00_peers_08, s00_peers_09, s00_peers_10, s00_peers_11, s00_peers_12, s00_peers_13, s00_peers_14, s00_peers_15, s00_peers_16,
+                   s01_peers_01, s01_peers_02, s01_peers_03, s01_peers_04, s01_peers_05, s01_peers_06, s01_peers_07, s01_peers_08, s01_peers_09, s01_peers_10, s01_peers_11, s01_peers_12, s01_peers_13, s01_peers_14,
+                   c00_peers_01, c00_peers_02, c00_peers_03, c00_peers_04, c00_peers_05, c00_peers_06, c00_peers_07, c00_peers_08, c00_peers_09, c00_peers_10, c00_peers_11, c00_peers_12,
+                   c01_peers_01, c01_peers_02, c01_peers_03, c01_peers_04, c01_peers_05, c01_peers_06, c01_peers_07, c01_peers_08, c01_peers_09, c01_peers_10, c01_peers_11, c01_peers_12,
+                   c02_peers_01, c02_peers_02, c02_peers_03, c02_peers_04, c02_peers_05, c02_peers_06, c02_peers_07, c02_peers_08, c02_peers_09, c02_peers_10, c02_peers_11, c02_peers_12, c02_peers_13, c02_peers_14, c02_peers_15, c02_peers_16,
+                   c03_peers_01, c03_peers_02, c03_peers_03, c03_peers_04, c03_peers_05, c03_peers_06, c03_peers_07, c03_peers_08, c03_peers_09, c03_peers_10,
+                   c04_peers_01, c04_peers_02, c04_peers_03, c04_peers_04, c04_peers_05, c04_peers_06, c04_peers_07, c04_peers_08,
+                   c05_peers_01, c05_peers_02, c05_peers_03, c05_peers_04, c05_peers_05, c05_peers_06, c05_peers_07, c05_peers_08, c05_peers_09, c05_peers_10,
+                   c06_peers_01, c06_peers_02, c06_peers_03, c06_peers_04, c06_peers_05, c06_peers_06,
+                   c07_peers_01, c07_peers_02, c07_peers_03, c07_peers_04, c07_peers_05, c07_peers_06, c07_peers_07, c07_peers_08,
+                   c08_peers_01, c08_peers_02, c08_peers_03, c08_peers_04, c08_peers_05, c08_peers_06, c08_peers_07, c08_peers_08, c08_peers_09, c08_peers_10, c08_peers_11, c08_peers_12,
+                   c09_peers_01, c09_peers_02, c09_peers_03, c09_peers_04, c09_peers_05, c09_peers_06, c09_peers_07, c09_peers_08,
+                   c10_peers_01, c10_peers_02,
+                   c11_peers_01, c11_peers_02)
+### Transform the peer evaluation data into node/edge format
+peers <- peers %>% filter(!is.na(src)) %>% filter(src != "")
+peers <- peers %>% mutate(id_eval = row_number()) %>% relocate(id_eval, .before = id_user)
+### skill levels
+peers <- right_join(peers, cursus_users[, c("level", "login", "Student", "campus", "month")], by = c("dest" = "login")) %>% rename(dest_level = level, dest_student = Student)
+peers <- right_join(peers, cursus_users[, c("level", "login", "Student")], by = c("src" = "login")) %>% rename(src_level = level, src_student = Student)
+peers <- peers %>% relocate(c(month, campus), .after = project)
+### skill gap
+peers <- peers %>% mutate(level_gap = src_level - dest_level)
+### tries, attempts, and validations
+##### dest user
+peers <- right_join(peers, cursus_users[, c("login", "s00_retries", "s00_attempted", "s00_validated",
+														"s01_retries", "s01_attempted", "s01_validated",
+														"c00_retries", "c00_attempted", "c00_validated",
+														"c01_retries", "c01_attempted", "c01_validated",
+													    "c02_retries", "c02_attempted", "c02_validated",
+														"c03_retries", "c03_attempted", "c03_validated",
+														"c04_retries", "c04_attempted", "c04_validated",
+														"c05_retries", "c05_attempted", "c05_validated",
+														"c06_retries", "c06_attempted", "c06_validated",
+														"c07_retries", "c07_attempted", "c07_validated",
+													    "c08_retries", "c08_attempted", "c08_validated",
+														"c09_retries", "c09_attempted", "c09_validated",
+														"c10_retries", "c10_attempted", "c10_validated",
+														"c11_retries", "c11_attempted", "c11_validated",
+														"c12_retries", "c12_attempted", "c12_validated",
+														"c13_retries", "c13_attempted", "c13_validated"
+                                            )], by = c("dest" = "login")) %>% rename(
+                                              "dest_s00_retries" = "s00_retries", "dest_s00_attempted" = "s00_attempted", "dest_s00_validated" = "s00_validated",
+                                              "dest_s01_retries" = "s01_retries", "dest_s01_attempted" = "s01_attempted", "dest_s01_validated" = "s01_validated",
+                                              "dest_c00_retries" = "c00_retries", "dest_c00_attempted" = "c00_attempted", "dest_c00_validated" = "c00_validated",
+                                              "dest_c01_retries" = "c01_retries", "dest_c01_attempted" = "c01_attempted", "dest_c01_validated" = "c01_validated",
+                                              "dest_c02_retries" = "c02_retries", "dest_c02_attempted" = "c02_attempted", "dest_c02_validated" = "c02_validated",
+                                              "dest_c03_retries" = "c03_retries", "dest_c03_attempted" = "c03_attempted", "dest_c03_validated" = "c03_validated",
+                                              "dest_c04_retries" = "c04_retries", "dest_c04_attempted" = "c04_attempted", "dest_c04_validated" = "c04_validated",
+                                              "dest_c05_retries" = "c05_retries", "dest_c05_attempted" = "c05_attempted", "dest_c05_validated" = "c05_validated",
+                                              "dest_c06_retries" = "c06_retries", "dest_c06_attempted" = "c06_attempted", "dest_c06_validated" = "c06_validated",
+                                              "dest_c07_retries" = "c07_retries", "dest_c07_attempted" = "c07_attempted", "dest_c07_validated" = "c07_validated",
+                                              "dest_c08_retries" = "c08_retries", "dest_c08_attempted" = "c08_attempted", "dest_c08_validated" = "c08_validated",
+                                              "dest_c09_retries" = "c09_retries", "dest_c09_attempted" = "c09_attempted", "dest_c09_validated" = "c09_validated",
+                                              "dest_c10_retries" = "c10_retries", "dest_c10_attempted" = "c10_attempted", "dest_c10_validated" = "c10_validated",
+                                              "dest_c11_retries" = "c11_retries", "dest_c11_attempted" = "c11_attempted", "dest_c11_validated" = "c11_validated",
+                                              "dest_c12_retries" = "c12_retries", "dest_c12_attempted" = "c12_attempted", "dest_c12_validated" = "c12_validated",
+                                              "dest_c13_retries" = "c13_retries", "dest_c13_attempted" = "c13_attempted", "dest_c13_validated" = "c13_validated"
+                                            )
+##### src user
+peers <- right_join(peers, cursus_users[, c("login", "s00_retries", "s00_attempted", "s00_validated",
+                                            "s01_retries", "s01_attempted", "s01_validated",
+                                            "c00_retries", "c00_attempted", "c00_validated",
+                                            "c01_retries", "c01_attempted", "c01_validated",
+                                            "c02_retries", "c02_attempted", "c02_validated",
+                                            "c03_retries", "c03_attempted", "c03_validated",
+                                            "c04_retries", "c04_attempted", "c04_validated",
+                                            "c05_retries", "c05_attempted", "c05_validated",
+                                            "c06_retries", "c06_attempted", "c06_validated",
+                                            "c07_retries", "c07_attempted", "c07_validated",
+                                            "c08_retries", "c08_attempted", "c08_validated",
+                                            "c09_retries", "c09_attempted", "c09_validated",
+                                            "c10_retries", "c10_attempted", "c10_validated",
+                                            "c11_retries", "c11_attempted", "c11_validated",
+                                            "c12_retries", "c12_attempted", "c12_validated",
+                                            "c13_retries", "c13_attempted", "c13_validated"
+)], by = c("src" = "login")) %>% rename(
+  "src_s00_retries" = "s00_retries", "src_s00_attempted" = "s00_attempted", "src_s00_validated" = "s00_validated",
+  "src_s01_retries" = "s01_retries", "src_s01_attempted" = "s01_attempted", "src_s01_validated" = "s01_validated",
+  "src_c00_retries" = "c00_retries", "src_c00_attempted" = "c00_attempted", "src_c00_validated" = "c00_validated",
+  "src_c01_retries" = "c01_retries", "src_c01_attempted" = "c01_attempted", "src_c01_validated" = "c01_validated",
+  "src_c02_retries" = "c02_retries", "src_c02_attempted" = "c02_attempted", "src_c02_validated" = "c02_validated",
+  "src_c03_retries" = "c03_retries", "src_c03_attempted" = "c03_attempted", "src_c03_validated" = "c03_validated",
+  "src_c04_retries" = "c04_retries", "src_c04_attempted" = "c04_attempted", "src_c04_validated" = "c04_validated",
+  "src_c05_retries" = "c05_retries", "src_c05_attempted" = "c05_attempted", "src_c05_validated" = "c05_validated",
+  "src_c06_retries" = "c06_retries", "src_c06_attempted" = "c06_attempted", "src_c06_validated" = "c06_validated",
+  "src_c07_retries" = "c07_retries", "src_c07_attempted" = "c07_attempted", "src_c07_validated" = "c07_validated",
+  "src_c08_retries" = "c08_retries", "src_c08_attempted" = "c08_attempted", "src_c08_validated" = "c08_validated",
+  "src_c09_retries" = "c09_retries", "src_c09_attempted" = "c09_attempted", "src_c09_validated" = "c09_validated",
+  "src_c10_retries" = "c10_retries", "src_c10_attempted" = "c10_attempted", "src_c10_validated" = "c10_validated",
+  "src_c11_retries" = "c11_retries", "src_c11_attempted" = "c11_attempted", "src_c11_validated" = "c11_validated",
+  "src_c12_retries" = "c12_retries", "src_c12_attempted" = "c12_attempted", "src_c12_validated" = "c12_validated",
+  "src_c13_retries" = "c13_retries", "src_c13_attempted" = "c13_attempted", "src_c13_validated" = "c13_validated"
+)
+### delete missing id_evals
+peers <- peers %>% filter(!is.na(id_eval))
+### have all NAs into 0
+peers[is.na(peers)] <- 0
+### order projects
+peers$project <- factor(peers$project, ordered = TRUE, levels = c("Shell 00", "Shell 01", "C 00", "C 01", "C 02", "C 03", "C 04", "C 05", "C 06", "C 07", "C 08", "C 09", "C 10", "C 11", "C 12", "C 13"))
+### group evaluations
+peers <- peers %>% mutate(student_status = case_when(dest_student == "Yes" & src_student == "Yes" ~ "Both",
+                                             dest_student == "Yes" & src_student == "No" ~ "Only Evaluatee",
+                                             dest_student == "No" & src_student == "Yes" ~ "Only Evaluator",
+                                             dest_student == "No" & src_student == "No" ~ "Neither"))
+
+peers$student_status <- factor(peers$student_status, ordered = TRUE, 
+                                levels = c("Both", "Only Evaluator", "Only Evaluatee", "Neither"))
+
+### evaluator/evaluatee level sum, n, mean
+
+# the sum of the levels of users who the user has evaluated is saved next to that user as 'score_evaluator'
+peers <- peers %>% group_by(src) %>% mutate(sum_evaluator = sum(dest_level))
+sum(peers[which(peers$src == "mbarut"), "dest_level"])
+
+# the sum of the levels of users who evaluated the user is saved next to that user as 'score_evaluatee'
+peers <- peers %>% group_by(dest) %>% mutate(sum_evaluatee = sum(src_level))
+sum(peers[which(peers$dest == "mbarut"), "src_level"])
+
+# how many instances the user has evaluated someone is saved as 'n_evaluator'
+peers <- peers %>% group_by(src) %>% mutate(n_evaluator = n())
+
+# how many instances the user has been evaluated is saved as 'n_evaluatee'
+peers <- peers %>% group_by(dest) %>% mutate(n_evaluatee = n())
+
+# score per eval
+
+peers <- peers %>% mutate(avg_level_of_evaluators = sum_evaluator / n_evaluator)
+peers <- peers %>% mutate(avg_level_of_evaluatees = sum_evaluatee / n_evaluatee)
+
+### some checks 
+
+sum(peers[which(peers$dest == "mbarut"), "src_level"])
+sum(peers[which(peers$src == "mbarut"), "dest_level"])
+
+peers[which(peers$dest == cursus_users[45, "login"]), c("sum_evaluatee", "n_evaluatee", "avg_level_of_evaluatees")] %>% nth(1) %>% nth(1)
+peers[which(peers$src == "mbarut"), c("sum_evaluator", "n_evaluator", "avg_level_of_evaluators")]
+
+### join some evaluation data with cursus_users
+
+i <- 1
+while (i < nrow(cursus_users)) {
+  cursus_users[i, "sum_evaluatee"] = peers[which(peers$dest == cursus_users[i, "login"]), "sum_evaluatee"] %>% nth(1) %>% nth(1)
+  cursus_users[i, "n_evaluatee"] = peers[which(peers$dest == cursus_users[i, "login"]), "n_evaluatee"] %>% nth(1) %>% nth(1)
+  cursus_users[i, "avg_level_of_evaluatees"] = peers[which(peers$dest == cursus_users[i, "login"]), "avg_level_of_evaluatees"] %>% nth(1) %>% nth(1)
+  cursus_users[i, "sum_evaluator"] = peers[which(peers$src == cursus_users[i, "login"]), "sum_evaluator"] %>% nth(1) %>% nth(1)
+  cursus_users[i, "n_evaluator"] = peers[which(peers$src == cursus_users[i, "login"]), "n_evaluator"] %>% nth(1) %>% nth(1)
+  cursus_users[i, "avg_level_of_evaluators"] = peers[which(peers$src == cursus_users[i, "login"]), "avg_level_of_evaluators"] %>% nth(1) %>% nth(1)
+  i <- i + 1
+}
+
+cursus_users <- cursus_users %>% mutate(
+  sum_evaluatee = ifelse(is.na(sum_evaluatee), 0, sum_evaluatee),
+  n_evaluatee = ifelse(is.na(n_evaluatee), 0, n_evaluatee),
+  avg_level_of_evaluatees = ifelse(is.na(avg_level_of_evaluatees), 0, avg_level_of_evaluatees),
+  sum_evaluator = ifelse(is.na(sum_evaluator), 0, sum_evaluator),
+  n_evaluator = ifelse(is.na(n_evaluator), 0, n_evaluator),
+  avg_level_of_evaluators = ifelse(is.na(avg_level_of_evaluators), 0, avg_level_of_evaluators))
+
+cursus_users <- cursus_users %>% mutate(
+  n_evaluation = n_evaluatee + n_evaluator,
+  avg_level_of_peers = ifelse(n_evaluatee == 0 | n_evaluator == 0, 0, (sum_evaluatee + sum_evaluator)/(n_evaluatee + n_evaluator))
+)
+
+# achievement data: portuguese -> english
+
+achievements[which(achievements$id == "330"), "name"] <- "Field Recognition"
+achievements[which(achievements$id == "330"), "description"] <- "Be active on at least 5 of 7 days in the first week of Basecamp."
+achievements[which(achievements$id == "331"), "name"] <- "First Footprints"
+achievements[which(achievements$id == "331"), "description"] <- "Be active on at least 5 of 7 days in the second week of Basecamp."
+achievements[which(achievements$id == "332"), "name"] <- "Explorer"
+achievements[which(achievements$id == "332"), "description"] <- "Be active on at least 5 of 7 days in the third week of Basecamp."
+achievements[which(achievements$id == "333"), "name"] <- "Focus I"
+achievements[which(achievements$id == "333"), "description"] <- "Achieve in the second week at least the number of points earned in the first week of Basecamp."
+achievements[which(achievements$id == "334"), "name"] <- "Focus II"
+achievements[which(achievements$id == "334"), "description"] <- "Achieve in the third week at least the number of points earned in the second week of Basecamp."
+achievements[which(achievements$id == "335"), "name"] <- "Super Focus"
+achievements[which(achievements$id == "335"), "description"] <- "Achieve in the fourth week at least the number of points earned in the third week of Basecamp."
+achievements[which(achievements$id == "336"), "name"] <- "Helper I"
+achievements[which(achievements$id == "336"), "description"] <- "Receive a certain number of votes in Voxotron during the first week of Basecamp."
+achievements[which(achievements$id == "337"), "name"] <- "Helper II"
+achievements[which(achievements$id == "337"), "description"] <- "Receive a certain number of votes in Voxotron during the second week of Basecamp."
+achievements[which(achievements$id == "338"), "name"] <- "Helper III"
+achievements[which(achievements$id == "338"), "description"] <- "Receive a certain number of votes in Voxotron during the third week of Basecamp."
+achievements[which(achievements$id == "339"), "name"] <- "Super Helper"
+achievements[which(achievements$id == "339"), "description"] <- "Receive a certain number of votes in Voxotron throughout the Basecamp."
+achievements[which(achievements$id == "340"), "name"] <- "Community I"
+achievements[which(achievements$id == "340"), "description"] <- "Participate at most of the events of the first week of Basecamp"
+achievements[which(achievements$id == "341"), "name"] <- "Community II"
+achievements[which(achievements$id == "341"), "description"] <- "Participate at most of the events of the second week of Basecamp"
+achievements[which(achievements$id == "342"), "name"] <- "Community III"
+achievements[which(achievements$id == "342"), "description"] <- "Participate at most of the events of the third week of Basecamp"
+achievements[which(achievements$id == "343"), "name"] <- "Super Community"
+achievements[which(achievements$id == "343"), "description"] <- "Participate in most of the events throughout the Basecamp."
+achievements[which(achievements$id == "344"), "name"] <- "United Village I"
+achievements[which(achievements$id == "344"), "description"] <- "At least 80% of your Village members have been active on min. 5 of 7 days in the first week of Basecamp."
+achievements[which(achievements$id == "345"), "name"] <- "United Village II"
+achievements[which(achievements$id == "345"), "description"] <- "At least 80% of your Village members have been active on min. 5 of 7 days in the second week of Basecamp."
+achievements[which(achievements$id == "348"), "name"] <- "United Village III"
+achievements[which(achievements$id == "348"), "description"] <- "At least 80% of your Village members have been active on min. 5 of 7 days in the third week of Basecamp."
+achievements[which(achievements$id == "347"), "name"] <- "Super Village"
+achievements[which(achievements$id == "347"), "description"] <- "At least 80% of your Village members have been active on min. 5 of 7 days throughout the Basecamp."
+
+### join achievement data with cursus_users
+
+##### Field Recognition
+cursus_users <- cursus_users %>% mutate("Activity: Level 1" = case_when(cursus_users$login %in% achievements_users_330$login | cursus_users$login %in% achievements_users_369$login ~ 1,
+                                                                        !(cursus_users$login %in% achievements_users_330$login | cursus_users$login %in% achievements_users_369$login) ~ 0))
+
+##### First Footprints
+cursus_users <- cursus_users %>% mutate("Activity: Level 2" = case_when(cursus_users$login %in% achievements_users_331$login | cursus_users$login %in% achievements_users_368$login ~ 1,
+                                                                       !(cursus_users$login %in% achievements_users_331$login | cursus_users$login %in% achievements_users_368$login) ~ 0))
+
+##### Explorer
+cursus_users <- cursus_users %>% mutate("Activity: Level 3" = case_when(cursus_users$login %in% achievements_users_332$login | cursus_users$login %in% achievements_users_362$login ~ 1,
+                                                               !(cursus_users$login %in% achievements_users_332$login | cursus_users$login %in% achievements_users_362$login) ~ 0))
+
+##### Focus I
+cursus_users <- cursus_users %>% mutate("Progression: Level 1" = case_when(cursus_users$login %in% achievements_users_333$login | cursus_users$login %in% achievements_users_363$login ~ 1,
+                                                              !(cursus_users$login %in% achievements_users_333$login | cursus_users$login %in% achievements_users_363$login) ~ 0))
+
+##### Focus II
+cursus_users <- cursus_users %>% mutate("Progression: Level 2" = case_when(cursus_users$login %in% achievements_users_334$login | cursus_users$login %in% achievements_users_364$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_334$login | cursus_users$login %in% achievements_users_364$login) ~ 0))
+
+##### Super Focus
+cursus_users <- cursus_users %>% mutate("Progression: Level 3" = case_when(cursus_users$login %in% achievements_users_335$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_335$login) ~ 0))
+
+##### Helper I
+cursus_users <- cursus_users %>% mutate("Helping Peers: Level 1" = case_when(cursus_users$login %in% achievements_users_336$login | cursus_users$login %in% achievements_users_365$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_336$login | cursus_users$login %in% achievements_users_365$login) ~ 0))
+
+##### Helper II
+cursus_users <- cursus_users %>% mutate("Helping Peers: Level 2" = case_when(cursus_users$login %in% achievements_users_337$login | cursus_users$login %in% achievements_users_366$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_337$login | cursus_users$login %in% achievements_users_366$login) ~ 0))
+
+##### Helper III
+cursus_users <- cursus_users %>% mutate("Helping Peers: Level 3" = case_when(cursus_users$login %in% achievements_users_338$login | cursus_users$login %in% achievements_users_367$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_338$login) ~ 0))
+
+##### Super Helper
+cursus_users <- cursus_users %>% mutate("Helping Peers: Level 4" = case_when(cursus_users$login %in% achievements_users_339$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_339$login) ~ 0))
+
+##### Community I
+cursus_users <- cursus_users %>% mutate("Event Participation: Level 1" = case_when(cursus_users$login %in% achievements_users_340$login | cursus_users$login %in% achievements_users_359$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_340$login | cursus_users$login %in% achievements_users_359$login) ~ 0))
+
+##### Community II
+cursus_users <- cursus_users %>% mutate("Event Participation: Level 2" = case_when(cursus_users$login %in% achievements_users_341$login | cursus_users$login %in% achievements_users_360$login  ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_341$login | cursus_users$login %in% achievements_users_360$login) ~ 0))
+
+##### Community III
+cursus_users <- cursus_users %>% mutate("Event Participation: Level 3" = case_when(cursus_users$login %in% achievements_users_342$login | cursus_users$login %in% achievements_users_361$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_342$login | cursus_users$login %in% achievements_users_361$login) ~ 0))
+
+##### Super Community
+cursus_users <- cursus_users %>% mutate("Event Participation: Level 4" = case_when(cursus_users$login %in% achievements_users_343$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_343$login) ~ 0))
+
+##### United Village I
+cursus_users <- cursus_users %>% mutate("Group Cohesion: Level 1" = case_when(cursus_users$login %in% achievements_users_344$login | cursus_users$login %in% achievements_users_374$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_344$login | cursus_users$login %in% achievements_users_374$login) ~ 0))
+
+##### United Village II
+cursus_users <- cursus_users %>% mutate("Group Cohesion: Level 2" = case_when(cursus_users$login %in% achievements_users_345$login | cursus_users$login %in% achievements_users_375$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_345$login | cursus_users$login %in% achievements_users_375$login) ~ 0))
+
+##### United Village III
+cursus_users <- cursus_users %>% mutate("Group Cohesion: Level 3" = case_when(cursus_users$login %in% achievements_users_348$login | cursus_users$login %in% achievements_users_376$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_348$login | cursus_users$login %in% achievements_users_376$login) ~ 0))
+
+##### Super Village
+cursus_users <- cursus_users %>% mutate("Group Cohesion: Level 4" = case_when(cursus_users$login %in% achievements_users_347$login ~ 1,
+                                                                    !(cursus_users$login %in% achievements_users_347$login) ~ 0))
+
+##### (Wolfsburg Only) Easter Egg Hunting
+
+cursus_users <- cursus_users %>% mutate("Easter Egg 1" = case_when(cursus_users$login %in% achievements_users_354$login ~ 1, !(cursus_users$login %in% achievements_users_354$login) ~ 0))
+cursus_users <- cursus_users %>% mutate("Easter Egg 2" = case_when(cursus_users$login %in% achievements_users_355$login ~ 1, !(cursus_users$login %in% achievements_users_355$login) ~ 0))
+cursus_users <- cursus_users %>% mutate("Easter Egg 3" = case_when(cursus_users$login %in% achievements_users_356$login ~ 1, !(cursus_users$login %in% achievements_users_356$login) ~ 0))
+cursus_users <- cursus_users %>% mutate("Easter Egg 4" = case_when(cursus_users$login %in% achievements_users_357$login ~ 1, !(cursus_users$login %in% achievements_users_357$login) ~ 0))
+cursus_users <- cursus_users %>% mutate("Easter Egg 5" = case_when(cursus_users$login %in% achievements_users_358$login ~ 1, !(cursus_users$login %in% achievements_users_358$login) ~ 0))
+
+cursus_users <- cursus_users %>% mutate(achievements_all = 
+                                          cursus_users$"Activity: Level 1" + cursus_users$"Activity: Level 2" + cursus_users$"Activity: Level 3" +
+                                          cursus_users$"Progression: Level 1" + cursus_users$"Progression: Level 2" + cursus_users$"Progression: Level 3" +
+                                          cursus_users$"Helping Peers: Level 1" + cursus_users$"Helping Peers: Level 2" + cursus_users$"Helping Peers: Level 3" + cursus_users$"Helping Peers: Level 4" +
+                                          cursus_users$"Event Participation: Level 1" + cursus_users$"Event Participation: Level 2" + cursus_users$"Event Participation: Level 3" + cursus_users$"Event Participation: Level 4" +
+                                          cursus_users$"Group Cohesion: Level 1" + cursus_users$"Group Cohesion: Level 2" + cursus_users$"Group Cohesion: Level 3" + cursus_users$"Group Cohesion: Level 4")
+
+cursus_users <- cursus_users %>% mutate(achievements_activity = cursus_users$"Activity: Level 1" + cursus_users$"Activity: Level 2" + cursus_users$"Activity: Level 3")
+cursus_users <- cursus_users %>% mutate(achievements_progression = cursus_users$"Progression: Level 1" + cursus_users$"Progression: Level 2" + cursus_users$"Progression: Level 3")
+cursus_users <- cursus_users %>% mutate(achievements_helping = cursus_users$"Helping Peers: Level 1" + cursus_users$"Helping Peers: Level 2" + cursus_users$"Helping Peers: Level 3" + cursus_users$"Helping Peers: Level 4")
+cursus_users <- cursus_users %>% mutate(achievements_participation = cursus_users$"Event Participation: Level 1" + cursus_users$"Event Participation: Level 2" + cursus_users$"Event Participation: Level 3" + cursus_users$"Event Participation: Level 4")
+cursus_users <- cursus_users %>% mutate(achievements_cohesion = cursus_users$"Group Cohesion: Level 1" + cursus_users$"Group Cohesion: Level 2" + cursus_users$"Group Cohesion: Level 3" + cursus_users$"Group Cohesion: Level 4")
+
+# Export as .csv
 write.csv(cursus_users, "data/csv/data_complete.csv", row.names = FALSE)

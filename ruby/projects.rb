@@ -9,7 +9,7 @@ require "oauth2"
 
 # Credentials
 UID = "f4e456317f7772886e192b7655b5b5f5f674c901b0f8806c3e4e9c7a7bdec0d1"
-SECRET = "GET_YOUR_OWN_KEY"
+SECRET = "_"
 
 # Create the client
 client = OAuth2::Client.new(UID, SECRET, site: "https://api.intra.42.fr")
@@ -17,80 +17,81 @@ client = OAuth2::Client.new(UID, SECRET, site: "https://api.intra.42.fr")
 # Get an access token
 token = client.client_credentials.get_token
 
-# Data of those who attended Germmany Basecamp (in February, March, and April)
-$i = 0
-$page = 1
-while $i < 50 do
-	users = token.get("/v2/cursus/germany-basecamp/cursus_users", params: {page: {number: $page}}).parsed
-	File.open("data/json/cursus_users.json", "a") do |f|
-		f.write(JSON.pretty_generate(users))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# Data of the students in Heilbronn
-$i = 0
-$page = 1
-while $i < 20 do
-	students = token.get("/v2/cursus/21/cursus_users", params: {page: {number: $page}, filter: {campus_id: 39}}).parsed
-	File.open("data/json/heilbronn_students.json", "a") do |f|
-		f.write(JSON.pretty_generate(students))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# Data of the students in Wolfsburg
-$i = 0
-$page = 1
-while $i < 20 do
-	students = token.get("/v2/cursus/21/cursus_users", params: {page: {number: $page}, filter: {campus_id: 44}}).parsed
-	File.open("data/json/wolfsburg_students.json", "a") do |f|
-		f.write(JSON.pretty_generate(students))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# Data of the users* in Heilbronn
-$i = 0
-$page = 1
-while $i < 50 do
-	heilbronn_users = token.get("/v2/campus/39/users", params: {page: {number: $page}}).parsed
-	File.open("data/json/heilbronn_users.json", "a") do |f|
-		f.write(JSON.pretty_generate(heilbronn_users))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# * users are those who have data in 42 because they attended the basecamp (not necessarily students)
+# IDs of all users
+$user_id = [
+	87324, 87427, 87428, 87430, 87431, 87432, 87433, 87434, 87435, 87436, 87325,
+	87438, 87439, 87605, 87607, 87608, 87609, 87611, 87613, 87614, 87616, 87617,
+	87619, 87620, 87623, 87624, 87625, 87628, 87629, 87630, 87631, 87635, 87995,
+	87996, 87997, 87998, 88004, 88005, 88009, 88079, 88081, 88088, 87331, 88134,
+	88135, 88136, 88138, 88140, 88141, 87110, 87111, 87112, 87116, 87117, 87119,
+	87122, 87124, 87125, 87126, 87128, 87333, 87129, 87130, 87133, 87135, 87137,
+	87138, 87334, 87140, 87141, 87143, 87145, 87146, 87147, 87148, 87149, 87152,
+	87154, 87155, 87156, 87157, 87158, 87336, 87159, 87160, 87161, 87162, 87163,
+	87164, 87165, 87166, 87167, 87168, 87337, 87169, 87170, 87171, 87172, 87173,
+    87174, 87175, 87176, 87177, 87178, 87338, 87179, 87180, 87181, 87182, 87183,
+    87184, 87185, 87186, 87187, 87188, 87189, 87190, 87191, 87192, 87193, 87196,
+    87197, 87198, 87199, 87200, 87201, 87202, 87203, 87204, 87205, 87206, 87207,
+    87208, 87341, 87210, 87211, 87212, 87213, 87214, 87216, 87217, 87218, 87219,
+    87220, 87221, 87222, 87223, 87224, 87225, 87226, 87280, 87287, 87293, 87303,
+    87343, 87304, 87305, 87306, 87307, 87308, 87310, 87311, 87312, 87313, 87314,
+    87315, 87316, 87328, 87347, 87382, 87386, 87401, 87440, 87317, 87443, 87603,
+    87604, 87618, 87622, 87950, 88001, 86031, 86032, 86033, 86034, 86035, 86036,
+    86037, 86038, 86039, 87349, 86040, 86041, 86043, 86044, 86045, 86046, 86047,
+    86048, 86049, 87350, 86050, 86051, 86053, 86054, 86055, 86056, 87351, 86060,
+    86061, 86062, 86063, 86064, 86065, 86066, 86067, 86068, 86069, 87352, 86070,
+    86071, 86072, 86073, 86074, 86075, 86077, 86089, 87353, 86090, 86091, 86092,
+    86094, 86095, 86096, 86098, 86111, 87354, 86112, 86113, 86114, 86115, 86116,
+    86117, 86156, 86157, 86158, 86160, 87355, 86163, 86164, 86165, 86177, 86179,
+    86180, 87356, 86185, 86186, 86194, 86195, 86196, 86199, 86208, 86209, 87318,
+    87357, 86216, 86218, 86220, 86222, 86223, 86225, 86227, 87358, 86228, 86229,
+    86231, 86234, 86237, 86238, 86253, 86255, 86256, 87359, 86305, 86306, 86308,
+    86309, 86311, 86312, 86313, 87360, 86314, 86315, 86317, 86318, 86320, 86321,
+    86323, 87361, 86324, 86328, 86329, 86341, 86345, 85592, 87362, 85610, 85619,
+    85976, 85500, 85501, 85503, 85504, 87363, 85505, 85506, 85507, 85508, 85510,
+    85511, 85512, 85514, 85515, 85516, 85517, 85518, 85519, 85520, 85521, 85522,
+    85523, 85524, 87365, 85525, 85526, 85527, 85528, 85530, 85531, 85532, 85533,
+    87366, 85535, 85537, 85538, 85539, 85540, 85541, 85543, 85544, 87319, 87367,
+    85545, 85546, 85547, 85548, 85550, 85551, 85552, 85553, 85554, 87368, 85555,
+    85557, 85558, 85559, 85560, 85561, 85562, 85563, 85564, 87369, 85565, 85567,
+    85568, 85569, 85571, 85572, 85573, 85574, 87370, 85575, 85576, 85577, 85578,
+    85579, 85580, 85582, 85583, 85584, 85585, 85586, 85587, 85588, 85589, 85590,
+    85591, 85593, 85594, 85595, 85596, 87372, 85598, 85599, 85600, 85601, 85602,
+    85604, 85605, 85608, 87373, 85611, 85612, 85613, 85614, 85615, 85616, 85617,
+    85618, 85620, 87374, 85621, 85622, 85623, 85624, 85625, 85626, 85627, 85629,
+    85630, 85631, 85634, 85635, 85636, 85637, 85980, 87376, 87320, 84273, 84271,
+    84205, 84144, 84147, 87378, 84169, 84176, 84187, 84188, 84190, 84191, 87379,
+    83407, 83408, 83411, 83413, 83414, 83415, 83416, 83417, 83419, 83420, 83421,
+    83422, 83423, 83425, 83426, 83427, 83428, 83429, 83430, 83431, 83433, 83434,
+    87388, 83435, 83436, 83437, 83438, 83440, 83441, 83442, 83443, 83444, 83446,
+    83447, 83448, 83449, 83450, 83451, 83453, 83454, 83456, 83457, 87390, 83458,
+    83459, 83460, 83461, 83462, 83463, 83465, 83467, 83469, 83471, 87391, 83473,
+    83474, 83475, 83476, 83477, 83478, 83479, 83480, 83481, 87392, 83483, 83484,
+    83485, 83486, 83517, 83519, 83520, 83522, 87321, 87393, 83523, 83524, 83525,
+    83526, 83527, 83528, 83531, 83533, 83535, 87394, 83536, 83554, 83563, 83566,
+    83567, 83569, 83570, 83572, 83577, 83578, 83579, 83580, 83582, 83584, 83585,
+    83591, 87396, 83592, 83593, 83595, 83602, 83617, 83618, 83619, 83620, 83621,
+    83626, 83627, 83629, 83632, 83651, 83652, 83654, 83764, 83774, 84161, 84162,
+    87399, 83445, 83452, 83455, 83464, 83466, 83468, 83470, 83487, 83488, 87400,
+    83489, 83490, 83491, 83492, 83493, 83495, 83496, 83497, 83498, 87402, 83500,
+    83501, 83502, 83503, 83504, 83505, 83506, 83507, 83508, 87403, 83509, 83510,
+    83511, 83512, 83513, 83976, 83514, 83515, 83516, 83518, 87322, 87404, 83529,
+    83530, 83534, 83537, 83538, 83539, 83540, 83541, 83542, 83543, 87405, 83544,
+    83545, 83546, 83547, 83548, 83550, 83551, 83552, 83553, 87408, 83556, 83557,
+    83558, 83559, 83560, 83561, 83562, 83564, 83565, 83568, 87409, 83571, 83573,
+    83574, 83581, 83586, 83587, 83588, 83589, 83590, 83596, 87410, 83597, 83598,
+    83599, 83600, 83601, 83604, 83607, 83608, 83609, 83610, 83611, 83613, 83614,
+    83615, 83616, 83624, 83625, 87413, 83628, 83630, 83631, 83635, 83636, 83637,
+    83638, 83639, 83641, 87414, 83642, 83643, 83644, 83645, 83646, 83647, 83648,
+    83649, 83650, 83659, 87415, 83660, 83662, 83663, 83664, 83666, 83667, 83668,
+    83669, 83670, 83673, 87416, 83678, 83679, 83680, 83681, 83682, 83683, 83686,
+    83689, 87323, 87417, 83691, 83697, 83698, 83699, 83700, 83703, 83705, 83706,
+    83707, 83709, 83716, 83718, 83725, 83728, 83733, 83740, 83743, 83769, 87419,
+    83770, 83771, 83773, 87420, 83398, 87421, 87422, 87423, 87424, 87425, 87426
+]
 
-# Data of the users* in Wolfsburg
-$i = 0
-$page = 1
-while $i < 50 do
-	wolfsburg_users = token.get("/v2/campus/44/users", params: {page: {number: $page}}).parsed
-	File.open("data/json/wolfsburg_users.json", "a") do |f|
-		f.write(JSON.pretty_generate(wolfsburg_users))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# * users are those who have data in 42 because they attended the basecamp (not necessarily students)
+# .json file directory
+$json_dir = "/home/mertbarut/42/persevere/data/json/"
 
-# Data of the projects in the Basecamp 
-while $i < 50 do
-	projects = token.get("/v2/cursus/germany-basecamp/projects", params: {page: {number: $page}}).parsed
-	File.open("public/projects.json", "a") do |f|
-		f.write(JSON.pretty_generate(projects))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
 # [a00] Data of the first project in the Basecamp: "I accept"
 $i = 0
 $page = 1
@@ -101,7 +102,7 @@ while $i < 50 do
 			project_id: {String: 1889},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/a00_users.json", "a") do |f|
+	File.open($json_dir + "a00_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(a00_users))
 	end
 	$i += 1
@@ -118,7 +119,7 @@ while $i < 50 do
 			project_id: {String: 1890},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/s00_users.json", "a") do |f|
+	File.open($json_dir + "s00_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(s00_users))
 	end
 	$i += 1
@@ -135,7 +136,7 @@ while $i < 50 do
 			project_id: {String: 1891},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/s01_users.json", "a") do |f|
+	File.open($json_dir + "s01_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(s01_users))
 	end
 	$i += 1
@@ -152,7 +153,7 @@ while $i < 50 do
 		project_id: {String: 1892},
 	}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c00_users.json", "a") do |f|
+	File.open($json_dir + "c00_users.json", "a") do |f|
 	f.write(JSON.pretty_generate(c00_users))
 	end
 	$i += 1
@@ -169,7 +170,7 @@ while $i < 50 do
 			project_id: {String: 1893},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c01_users.json", "a") do |f|
+	File.open($json_dir + "c01_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c01_users))
 	end
 	$i += 1
@@ -186,7 +187,7 @@ while $i < 50 do
 			project_id: {String: 1894},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c02_users.json", "a") do |f|
+	File.open($json_dir + "c02_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c02_users))
 	end
 	$i += 1
@@ -203,7 +204,7 @@ while $i < 40 do
 			project_id: {String: 1895},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c03_users.json", "a") do |f|
+	File.open($json_dir + "c03_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c03_users))
 	end
 	$i += 1
@@ -220,7 +221,7 @@ while $i < 40 do
 			project_id: {String: 1896},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c04_users.json", "a") do |f|
+	File.open($json_dir + "c04_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c04_users))
 	end
 	$i += 1
@@ -237,7 +238,7 @@ while $i < 40 do
 			project_id: {String: 1897},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c05_users.json", "a") do |f|
+	File.open($json_dir + "c05_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c05_users))
 	end
 	$i += 1
@@ -254,7 +255,7 @@ while $i < 20 do
 			project_id: {String: 1898},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c06_users.json", "a") do |f|
+	File.open($json_dir + "c06_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c06_users))
 	end
 	$i += 1
@@ -271,7 +272,7 @@ while $i < 20 do
 			project_id: {String: 1899},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c07_users.json", "a") do |f|
+	File.open($json_dir + "c07_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c07_users))
 	end
 	$i += 1
@@ -288,7 +289,7 @@ while $i < 10 do
 			project_id: {String: 1900},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c08_users.json", "a") do |f|
+	File.open($json_dir + "c08_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c08_users))
 	end
 	$i += 1
@@ -305,7 +306,7 @@ while $i < 10 do
 			project_id: {String: 1901},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c09_users.json", "a") do |f|
+	File.open($json_dir + "c09_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c09_users))
 	end
 	$i += 1
@@ -322,7 +323,7 @@ while $i < 5 do
 			project_id: {String: 1903},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c10_users.json", "a") do |f|
+	File.open($json_dir + ("c10_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c10_users))
 	end
 	$i += 1
@@ -339,7 +340,7 @@ while $i < 5 do
 			project_id: {String: 1904},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c11_users.json", "a") do |f|
+	File.open($json_dir + "c11_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c11_users))
 	end
 	$i += 1
@@ -356,7 +357,7 @@ while $i < 5 do
 			project_id: {String: 1905},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c12_users.json", "a") do |f|
+	File.open($json_dir + "c12_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c12_users))
 	end
 	$i += 1
@@ -373,7 +374,7 @@ while $i < 5 do
 			project_id: {String: 1906},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/c13_users.json", "a") do |f|
+	File.open($json_dir + "c13_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(c13_users))
 	end
 	$i += 1
@@ -390,7 +391,7 @@ while $i < 50 do
 			project_id: {String: 1907},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/r00_users.json", "a") do |f|
+	File.open($json_dir + "r00_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(r00_users))
 	end
 	$i += 1
@@ -407,59 +408,8 @@ while $i < 30 do
 			project_id: {String: 1908},
 		}
 	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/r01_users.json", "a") do |f|
+	File.open($json_dir + "r01_users.json", "a") do |f|
 		f.write(JSON.pretty_generate(r01_users))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# [e00] Data of the first exam in the Basecamp: "Exam 00"
-$i = 0
-$page = 1
-while $i < 50 do
-	e00_users = token.get("/v2/projects/1909/projects_users", params: 
-		{
-			page: {number: $page},
-			project_id: {String: 1909},
-		}
-	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/e00_users.json", "a") do |f|
-		f.write(JSON.pretty_generate(e00_users))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# [e01] Data of the second exam in the Basecamp: "Exam 01"
-$i = 0
-$page = 1
-while $i < 21 do
-	e01_users = token.get("/v2/projects/1910/projects_users", params: 
-		{
-			page: {number: $page},
-			project_id: {String: 1910},
-		}
-	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/e01_users.json", "a") do |f|
-		f.write(JSON.pretty_generate(e01_users))
-	end
-	$i += 1
-	$page += 1
-	sleep(0.5)
-end
-# [e02] Data of the final exam in the Basecamp: "Final Exam"
-$i = 0
-$page = 1
-while $i < 21 do
-	e02_users = token.get("/v2/projects/1911/projects_users", params: 
-		{
-			page: {number: $page},
-			project_id: {String: 1911},
-		}
-	).parsed
-	File.open("/home/mertbarut/42analytics/data/json/e02_users.json", "a") do |f|
-		f.write(JSON.pretty_generate(e02_users))
 	end
 	$i += 1
 	$page += 1

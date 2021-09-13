@@ -194,3 +194,167 @@ tries$value <- as.numeric(tries$value)
   theme(legend.position="right") +
   theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
   labs(title = "Project Tries per individual Project by Student Status\nGrouped by Campus and Piscine Month", x = "Projects", y = "Proportion of Participants who Tried the Project")
+
+# Summarize Peer evaluations
+
+(evals_bycampusmonth = peers %>% group_by(campus, month) %>% summarise(n = n()))
+(users_bycampusmonth = cursus_users %>% group_by(campus, month) %>% summarise(n = n()))
+
+(students_bycampusmonth = cursus_users %>% group_by(student) %>% summarise(n = n()))
+
+(evals_student = peers %>% group_by(student_status) %>% summarise(n = n()))
+(evals_dest_level_bycampusmonth = peers %>% group_by(campus, month) %>% summarise(mean_level = mean(dest_level)))
+(evals_src_level_bycampusmonth = peers %>% group_by(campus, month) %>% summarise(mean_level = mean(src_level)))
+
+(sum_evaluator_bymonthcampusstudent = cursus_users %>% group_by(campus, month, Student) %>% summarise(n = n(), m_sum_evaluator = mean(sum_evaluator), sd_sum_evaluator = sd(sum_evaluator), min_sum_evaluator = min(sum_evaluator), max_sum_evaluator = max(sum_evaluator)))
+(sum_evaluatee_bymonthcampusstudent = cursus_users %>% group_by(campus, month, Student) %>% summarise(n = n(), m_sum_evaluatee = mean(sum_evaluatee), sd_sum_evaluator = sd(sum_evaluatee), min_sum_evaluatee = min(sum_evaluatee), max_sum_evaluatee = max(sum_evaluatee)))
+
+(n_evaluator_bymonthcampusstudent = cursus_users %>% group_by(campus, month, Student) %>% summarise(n = n(), m_evaluator = mean(n_evaluator), sd_evaluator = sd(n_evaluator), min_evaluator = min(n_evaluator), max_evaluator = max(n_evaluator)))
+(n_evaluatee_bymonthcampusstudent = cursus_users %>% group_by(campus, month, Student) %>% summarise(n = n(), m_evaluatee = mean(n_evaluatee), sd_evaluatee = sd(n_evaluatee), min_evaluatee = min(n_evaluatee), max_evaluatee = max(n_evaluatee)))
+(n_peers_bystudent = cursus_users %>% group_by(Student) %>% summarise(n = n(), m_evaluation = mean(n_evaluation), sd_evaluation = sd(n_evaluation), min_evaluation = min(n_evaluation), max_evaluation = max(n_evaluation)))
+
+(p_errorbar_evaluators_per_user_bymonthcampus <- ggplot(n_evaluator_bymonthcampusstudent, aes(x = Student, y = m_evaluator, fill = Student))) + 
+  geom_bar(stat = "identity", color = "black", position = position_dodge()) +
+  geom_errorbar(aes(ymin = m_evaluator - sd_evaluator, ymax = m_evaluator + sd_evaluator), width = .2, position = position_dodge(.9)) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(legend.position = "right") +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "_\nGrouped by Campus and Piscine Month", x = "Projects", y = "Proportion")
+
+(avg_level_of_evaluators_bymonthcampusstudent = cursus_users %>% group_by(campus, month, Student) %>% summarise(n = n(), m_avg_level_of_evaluators = mean(avg_level_of_evaluators), sd_avg_level_of_evaluators = sd(avg_level_of_evaluators), min_avg_level_of_evaluators = min(avg_level_of_evaluators), max_avg_level_of_evaluators = max(avg_level_of_evaluators)))
+(avg_level_of_evaluatees_bymonthcampusstudent = cursus_users %>% group_by(campus, month, Student) %>% summarise(n = n(), m_avg_level_of_evaluatees = mean(avg_level_of_evaluatees), sd_avg_level_of_evaluatees = sd(avg_level_of_evaluatees), min_avg_level_of_evaluatees = min(avg_level_of_evaluatees), max_avg_level_of_evaluatees = max(avg_level_of_evaluatees)))
+
+### Create histograms
+(p_hst_gap <- ggplot(data = peers, aes(x = level_gap))) + 
+  geom_histogram(aes(y = ..density..), breaks = seq(-10, 10, by = 0.5), alpha=.8, position = 'identity') +
+  stat_function(fun = dnorm, args = list(mean = mean(peers$level_gap), sd = sd(peers$level_gap))) +
+  facet_wrap(~ campus + month) +
+  theme_minimal()  +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
+  labs(title = "Histograms of Skill Gap in Peer Evaluations Grouped by Campus and Month", x = "Skill Gap", y = "Proportion")
+###
+(lvlgap_bymonthcampusproject = peers %>% group_by(campus, month, project, student_status) %>% summarise(n = n(), m_gap = mean(level_gap), sd_gap = sd(level_gap), min_gap = min(level_gap), max_gap = max(level_gap)))
+### wide -> tall
+(lvlgap_n <- melt(lvlgap_bymonthcampusproject[, c("n", "campus", "month", "project", "student_status")], id.vars = c("campus", "month", "project", "student_status")))
+(lvlgap_mean <- melt(lvlgap_bymonthcampusproject[, c("m_gap", "campus", "month", "project", "student_status")], id.vars = c("campus", "month", "project", "student_status")))
+
+### Create bar plots
+(p_bar_lvlgap_n_bymonthcampusproject <- ggplot(lvlgap_n, aes(x = project, y = value))) + 
+  geom_bar(stat='identity', aes(fill = student_status)) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(legend.position="right") +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Number of Evaluations per Project\nGrouped by Campus and Piscine Month", x = "Projects", y = "Number of Evaluations") +
+  guides(fill = guide_legend(title = "Student Status of Peers\nin the Evaluation"))
+
+### Create line plots
+(p_lin_lvlgap_mean_bycampuslevelstudent <- ggplot(lvlgap_mean, aes(x = project, y = value, group = student_status))) + 
+  geom_line(aes(color = student_status)) +
+  geom_point(aes(color = student_status)) +
+  geom_smooth(aes(color = student_status, fill = student_status), alpha=0.1, method = "auto", se = TRUE, fullrange = FALSE, level = 0.95) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(legend.position="right") +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "_\nGrouped by Campus and Piscine Month", x = "Projects", y = "Mean")
+
+### dot plots - number of evaluators
+(p_dot_n_evaluation_bycampuslevelstudent <- ggplot(cursus_users, aes(x = Student, y = n_evaluation))) + 
+  geom_dotplot(binwidth = 1, binaxis = 'y', stackdir = 'center') +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", color = "#00BABC", width = 0.5, size = 2, alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 15, color = "#00BABC", size = 3, alpha = 1) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Number of Evaluators Each User Had During the Basecamp\nGrouped by Campus and Piscine Month", x = "Projects", y = "Number of Evaluators") +
+  ylim(-5, 150)
+
+### dot plots - number of evaluatees
+(p_dot_n_evaluatee_bycampuslevelstudent <- ggplot(cursus_users, aes(x = Student, y = n_evaluatee))) + 
+  geom_dotplot(binwidth = 1, binaxis = 'y', stackdir = 'center') +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", color = "#00BABC", width = 0.5, size = 2, alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 15, color = "#00BABC", size = 3, alpha = 1) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Number of Evaluatees Each User Had During the Basecamp\nGrouped by Campus and Piscine Month", x = "Projects", y = "Number of Evaluatees") +
+  ylim(-5, 80)
+
+### dot plots - sum of the levels of all evaluators each user had
+(p_dot_avg_lvl_evaluator_bycampuslevelstudent <- ggplot(cursus_users, aes(x = Student, y = sum_evaluator))) + 
+  geom_dotplot(binwidth = 5, binaxis = 'y', stackdir = 'center') +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", color = "#00BABC", width = 0.5, size = 2, alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 15, color = "#00BABC", size = 3, alpha = 1) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Sum of the Levels of Evaluatees Each User Had During the Basecamp\nGrouped by Campus and Piscine Month", x = "Projects", y = "Level") +
+  ylim(-10, 350)
+
+### dot plots - sum of the levels of all evaluatees each user had
+(p_dot_avg_lvl_evaluatee_bycampuslevelstudent <- ggplot(cursus_users, aes(x = Student, y = sum_evaluatee))) + 
+  geom_dotplot(binwidth = 5, binaxis = 'y', stackdir = 'center') +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", color = "#00BABC", width = 0.5, size = 2, alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 15, color = "#00BABC", size = 3, alpha = 1) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Sum of the Levels of Evaluatees Each User Had During the Basecamp\nGrouped by Campus and Piscine Month", x = "Projects", y = "Level") +
+  ylim(-10, 350)
+
+### dot plots - avg. level of peers each user had for evaluations
+(p_dot_avg_lvl_peer_bycampuslevelstudent <- ggplot(cursus_users, aes(x = Student, y = avg_level_of_peers))) + 
+  geom_dotplot(binwidth = 0.1, binaxis = 'y', stackdir = 'center') +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", color = "#00BABC", width = 0.5, size = 2, alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 15, color = "#00BABC", size = 3, alpha = 1) +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Average Level of Evaluatees Each User Had During the Basecamp\nGrouped by Campus and Piscine Month", x = "Projects", y = "Number of Evaluatees") +
+  ylim(-1, 10)
+
+# Summarize Achievements
+
+(p_hst_achievements_all <- ggplot(data = cursus_users, aes(x = achievements_all, fill = Student))) + 
+  geom_histogram(aes(y = ..count..), breaks = seq(-1, 25, by = 1), alpha=.8, position = 'identity') +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
+  labs(title = "Histograms of Achievements Grouped by Campus and Month", x = "Total Achievements", y = "Count")
+
+(p_hst_achievements_activity <- ggplot(data = cursus_users, aes(x = achievements_activity, fill = Student))) + 
+  geom_histogram(aes(y = ..count..), breaks = seq(-1, 6, by = 1), alpha=.8, position = 'identity') +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
+  labs(title = "Histograms of Achievements of Activity Grouped by Campus and Month", x = "Total Achievements", y = "Count")
+
+(p_hst_achievements_progression <- ggplot(data = cursus_users, aes(x = achievements_progression, fill = Student))) + 
+  geom_histogram(aes(y = ..count..), breaks = seq(-1, 6, by = 1), alpha=.8, position = 'identity') +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
+  labs(title = "Histograms of Achievements of Progression Grouped by Campus and Month", x = "Total Achievements", y = "Count")
+
+(p_hst_achievements_helping <- ggplot(data = cursus_users, aes(x = achievements_helping, fill = Student))) + 
+  geom_histogram(aes(y = ..count..), breaks = seq(-1, 6, by = 1), alpha=.8, position = 'identity') +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
+  labs(title = "Histograms of Achievements of Helping Peers Grouped by Campus and Month", x = "Total Achievements", y = "Count")
+
+(p_hst_achievements_participation <- ggplot(data = cursus_users, aes(x = achievements_participation, fill = Student))) + 
+  geom_histogram(aes(y = ..count..), breaks = seq(-1, 6, by = 1), alpha=.8, position = 'identity') +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
+  labs(title = "Histograms of Achievements of Event Participation Grouped by Campus and Month", x = "Total Achievements", y = "Count")
+
+(p_hst_achievements_cohesion <- ggplot(data = cursus_users, aes(x = achievements_cohesion, fill = Student))) + 
+  geom_histogram(aes(y = ..count..), breaks = seq(-1, 6, by = 1), alpha=.8, position = 'identity') +
+  facet_wrap(~ campus + month) +
+  theme_minimal() +
+  theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
+  labs(title = "Histograms of Achievements of Tribe/Group Cohesion Grouped by Campus and Month", x = "Total Achievements", y = "Count")

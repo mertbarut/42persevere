@@ -5,10 +5,10 @@ account: mertbarut
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4523426
-bundleId: 4958796
+bundleId: 5017249
 url: https://mertbarut.shinyapps.io/42network/
-when: 1629821299.84191
-lastSyncTime: 1629821299.84191
+when: 1631220244.60226
+lastSyncTime: 1631220244.60226
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: tests/shinytest.R

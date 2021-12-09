@@ -112,6 +112,14 @@ library(dplyr)
 	achievements_users_438 = read.csv('data/csv/achievements_users_438.csv')
 	### Evaluations
 	evaluations = read.csv("data/csv/evaluations.csv")
+	### (Wolfsburg only) Extra data
+	extra_gender = read.csv("data/csv/extra_gender.csv")
+	extra_education = read.csv("data/csv/extra_education.csv")
+	extra_prev_exp = read.csv("data/csv/extra_prev_exp.csv")
+	extra_games = read.csv("data/csv/extra_games.csv")
+	extra_n_event = read.csv("data/csv/extra_n_event.csv")
+	extra_discord = read.csv("data/csv/extra_discord.csv")
+	extra_vox = read.csv("data/csv/extra_vox.csv")
 }
 # Base merge operations
 {
@@ -467,6 +475,9 @@ cursus_users <- cursus_users %>% mutate(total_tries = s00_retries + s01_retries 
                                           c07_retries + c08_retries + c09_retries + c10_retries + c11_retries + 
                                           c12_retries + c13_retries + r00_retries + r01_retries + e00_retries + 
                                           e01_retries + e02_retries)
+### Number or retries per validation
+cursus_users <- cursus_users %>% mutate(persistance = total_tries / total_validated)
+
 ### Assign campus to users
 cursus_users <- full_join(cursus_users, heilbronn_users[,2:7], by = "login", suffix = c("", ""))
 cursus_users$campus[is.na(cursus_users$campus)] <- "Wolfsburg"
@@ -931,6 +942,47 @@ cursus_users <- cursus_users %>% mutate(achievements_progression = cursus_users$
 cursus_users <- cursus_users %>% mutate(achievements_helping = cursus_users$"Helping Peers: Level 1" + cursus_users$"Helping Peers: Level 2" + cursus_users$"Helping Peers: Level 3" + cursus_users$"Helping Peers: Level 4")
 cursus_users <- cursus_users %>% mutate(achievements_participation = cursus_users$"Event Participation: Level 1" + cursus_users$"Event Participation: Level 2" + cursus_users$"Event Participation: Level 3" + cursus_users$"Event Participation: Level 4")
 cursus_users <- cursus_users %>% mutate(achievements_cohesion = cursus_users$"Group Cohesion: Level 1" + cursus_users$"Group Cohesion: Level 2" + cursus_users$"Group Cohesion: Level 3" + cursus_users$"Group Cohesion: Level 4")
+
+##### (Wolfsburg Only) Extra Data
+####### Gender
+cursus_users = left_join(cursus_users, extra_gender, by = c("login"))
+####### Previous (formal) Education
+cursus_users = left_join(cursus_users, extra_education, by = c("login"))
+{
+  # Handle missingness
+  cursus_users[which(cursus_users$edu1 == "n/a"), "edu1"] <- NA
+  cursus_users[which(cursus_users$edu1 == "no data"), "edu1"] <- NA
+  cursus_users[which(cursus_users$edu1 == ""), "edu1"] <- NA
+  
+  # Level coding schema:
+  ### - 'No formal education'     :     0
+  ### - 'Primary education'       :     1
+  ### - 'Secondary education'     :     2
+  ### - 'Comprehensive education' :     2
+  ### - 'Apprenticeship'          :     2
+  ### - 'Vocational education'    :     2
+  ### - 'University'              :     3
+  ### - 'Technical college'       :     3
+  
+  cursus_users[which(cursus_users$edu1 == "No formal education"), "edu"] <- 0
+  cursus_users[which(cursus_users$edu1 == "Primary education"), "edu"] <- 1
+  cursus_users[which(cursus_users$edu1 == "Secondary education"), "edu"] <- 2
+  cursus_users[which(cursus_users$edu1 == "Comprehensive education"), "edu"] <- 2
+  cursus_users[which(cursus_users$edu1 == "Apprenticeship"), "edu"] <- 2
+  cursus_users[which(cursus_users$edu1 == "Vocational education"), "edu"] <- 2
+  cursus_users[which(cursus_users$edu1 == "University"), "edu"] <- 3
+  cursus_users[which(cursus_users$edu1 == "Technical college"), "edu"] <- 3
+}
+####### Previous experience or enthusiasm with coding before the Basecamp
+cursus_users = left_join(cursus_users, extra_prev_exp, by = c("login"))
+####### Aptitude games
+cursus_users = left_join(cursus_users, extra_games, by = c("login"))
+####### Total number of subscribed events
+cursus_users = left_join(cursus_users, extra_n_event, by = c("login"))
+####### Discord data
+cursus_users = left_join(cursus_users, extra_discord, by = c("login"))
+####### Voxotron data
+cursus_users = left_join(cursus_users, extra_vox, by = c("login"))
 
 # Export as .csv
 write.csv(cursus_users, "data/csv/data_complete.csv", row.names = FALSE)

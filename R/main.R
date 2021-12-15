@@ -120,6 +120,8 @@ library(dplyr)
 	extra_n_event = read.csv("data/csv/extra_n_event.csv")
 	extra_discord = read.csv("data/csv/extra_discord.csv")
 	extra_vox = read.csv("data/csv/extra_vox.csv")
+	extra_cur = read.csv("data/csv/extra_cur.csv")
+	extra_accepted = read.csv("data/csv/extra_accepted.csv")
 }
 # Base merge operations
 {
@@ -489,6 +491,7 @@ cursus_users <- cursus_users %>% relocate(Student, .after = login)
 ### Test/staff/duplicate/etc users
 cursus_users <- cursus_users %>% filter(month != 0)						# These users have non-standard piscine start datetimes; thus are not valid
 cursus_users <- cursus_users %>% filter(id_user != 84189)				# This user is a staff member; thus is not valid
+cursus_users <- cursus_users %>% filter(id_user != 83398)       # ditto
 cursus_users <- cursus_users %>% filter(level != 0)						# These users did not complete "I accept"; thus are not valid
 cursus_users <- cursus_users %>% distinct(id_user, .keep_all = TRUE)	# Keep only unique users
 
@@ -944,6 +947,7 @@ cursus_users <- cursus_users %>% mutate(achievements_participation = cursus_user
 cursus_users <- cursus_users %>% mutate(achievements_cohesion = cursus_users$"Group Cohesion: Level 1" + cursus_users$"Group Cohesion: Level 2" + cursus_users$"Group Cohesion: Level 3" + cursus_users$"Group Cohesion: Level 4")
 
 ##### (Wolfsburg Only) Extra Data
+####### The following data is not valid for Heilbronn based users!
 ####### Gender
 cursus_users = left_join(cursus_users, extra_gender, by = c("login"))
 ####### Previous (formal) Education
@@ -979,10 +983,43 @@ cursus_users = left_join(cursus_users, extra_prev_exp, by = c("login"))
 cursus_users = left_join(cursus_users, extra_games, by = c("login"))
 ####### Total number of subscribed events
 cursus_users = left_join(cursus_users, extra_n_event, by = c("login"))
-####### Discord data
+######### Users with missing values seems like they did not subscribe to any event
+######### It can be assumed that their values for these columns are 0
+cursus_users$n_event[is.na(cursus_users$n_event)] <- 0
+####### Discord data (no missing data)
 cursus_users = left_join(cursus_users, extra_discord, by = c("login"))
-####### Voxotron data
+######### Users with missing values seems like they did not join the discord server
+######### It can be assumed that their values for these columns are 0
+cursus_users$discord_online[is.na(cursus_users$discord_online)] <- 0
+cursus_users$discord_vc[is.na(cursus_users$discord_vc)] <- 0
+####### Voxotron (no missing data)
 cursus_users = left_join(cursus_users, extra_vox, by = c("login"))
+####### Current level
+cursus_users = left_join(cursus_users, extra_cur, by = c("login"))
+####### Accepted students, and accepted students who got cold feet
+{
+  ##### Some corrections
+  cursus_users[which(cursus_users$login == "nhoang"), "Student"] = "No"
+  cursus_users[which(cursus_users$login == "aghia"), "Student"] = "No"
+  cursus_users[which(cursus_users$login == "sjuravle"), "Student"] = "No"
+  cursus_users[which(cursus_users$login == "thunguye"), "Student"] = "No"
+  cursus_users[which(cursus_users$login == "nsilvest"), "Student"] = "No"
+  cursus_users[which(cursus_users$login == "swiegand"), "Student"] = "No"
+  cursus_users[which(cursus_users$login == "mkazhyba"), "Student"] = "No"
+  
+  cursus_users <- cursus_users %>% mutate(coldfeet = case_when(
+    cursus_users$login %in% extra_accepted$login == TRUE ~ 1))
+  cursus_users$coldfeet[is.na(cursus_users$coldfeet)] <- 0
+  cursus_users <- cursus_users %>% mutate(accepted = case_when(cursus_users$coldfeet == 1 | cursus_users$Student == "Yes" ~ 1,
+                                                               !(cursus_users$coldfeet == 1 | cursus_users$Student == "Yes") ~ 0))
+  cursus_users <- cursus_users %>% mutate(inactive = case_when((cursus_users$cur == 0) & cursus_users$Student == "Yes" ~ 1,
+                                                               cursus_users$cur > 0 & cursus_users$Student == "Yes" ~ 0))
+  cursus_users <- cursus_users %>% mutate(detached = case_when(cursus_users$inactive == 1 | cursus_users$coldfeet == 1 ~ 1,
+                                                               !(cursus_users$inactive == 1 | cursus_users$coldfeet == 1) ~ 0))
+}
+
+####### Subsetting
+wob <- subset(cursus_users, campus == "Wolfsburg")
 
 # Export as .csv
 write.csv(cursus_users, "data/csv/data_complete.csv", row.names = FALSE)

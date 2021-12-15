@@ -41,18 +41,3 @@ rcorr(as.matrix(cursus_users[ , c("total_tries",
                                   "achievements_participation",
                                   "achievements_cohesion")]))
 
-# (Extra)
-
-rcorr(as.matrix(cursus_users[ , c("total_tries",
-                                  "total_attempted",
-                                  "total_validated",
-                                  "n_evaluatee",
-                                  "avg_level_of_evaluatees",
-                                  "n_evaluator",
-                                  "avg_level_of_evaluators",
-                                  "achievements_activity",
-                                  "achievements_progression",
-                                  "achievements_helping",
-                                  "achievements_participation",
-                                  "achievements_cohesion",
-                                  "prev_exp")]))

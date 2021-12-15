@@ -5,7 +5,7 @@ library(ggplot2)
 
 # Select the relevant data
 
-data_pca1 <- cursus_users %>% select("level",
+data_pca1 <- wob %>% select("level",
                                     "total_tries",
                                     "total_attempted",
                                     "total_validated",
@@ -15,25 +15,31 @@ data_pca1 <- cursus_users %>% select("level",
                                     "achievements_progression",
                                     "achievements_helping",
                                     "achievements_participation",
-                                    "achievements_cohesion")
+                                    "achievements_cohesion",
+                                    "n_event",
+                                    "discord_online",
+                                    "discord_vc",
+                                    "votes_used",
+                                    "votes_received")
 
 # PCA
 
-cursus_users.pca1 <- prcomp(data_pca1, center = TRUE, scale. = TRUE)
+wob.pca1 <- prcomp(data_pca1, center = TRUE, scale. = TRUE)
+wob.pca1
 
 # Bind the components back with org. data
 
-cursus_users <- cbind(cursus_users, cursus_users.pca$x[, 1:(ncol(data_pca))])
+wob <- cbind(wob, wob.pca1$x[, 1:(ncol(data_pca1))])
 
 # Summary
 
-summary(cursus_users.pca1)
+summary(wob.pca1)
 
 # Extract the explained total variance from all variables
 
-var_explained_df <- data.frame(PC = paste0("PC", 1:11), var_explained = (cursus_users.pca1$sdev)^2/sum((cursus_users.pca1$sdev)^2))
+var_explained_df <- data.frame(PC = paste0("PC", 1:16), var_explained = (wob.pca1$sdev)^2/sum((wob.pca1$sdev)^2))
 
-var_explained_df$PC <- factor(var_explained_df$PC, ordered = TRUE, levels = c("PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11"))
+var_explained_df$PC <- factor(var_explained_df$PC, ordered = TRUE, levels = c("PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PC16"))
 
 head(var_explained_df)
 
@@ -46,7 +52,7 @@ var_explained_df %>%
   labs(title = "Scree plot: PCA on scaled data", x = "Principal Components", y = "Explained Variance") +
   ylim(0, 1)
 
-ggplot(cursus_users, aes(PC1, PC2, col = Student, fill = Student)) +
+ggplot(wob, aes(PC1, PC2, col = Student, fill = Student)) +
   stat_ellipse(geom = "polygon", col = "black", alpha = 0.5) +
   geom_point(shape = 21, col = "black") +
   facet_wrap(~ campus + month) +
@@ -54,11 +60,11 @@ ggplot(cursus_users, aes(PC1, PC2, col = Student, fill = Student)) +
 
 # Convert type of student to dummy for cor. table
 
-cursus_users$student <- as.numeric(as.factor(cursus_users$Student)) - 1
+wob$student <- as.numeric(as.factor(wob$Student)) - 1
 
 # Calculate rounded correlation coeffiecients between the components and other variables
 
-round(cor(cursus_users[ , c(
+round(cor(wob[ , c(
   "level",
   "total_tries",
   "total_attempted",
@@ -70,18 +76,21 @@ round(cor(cursus_users[ , c(
   "achievements_helping",
   "achievements_participation",
   "achievements_cohesion",
-  "student",
+  "n_event",
+  "discord_online",
+  "discord_vc",
+  "votes_used",
+  "votes_received",
   "PC1",
   "PC2",
   "PC3")],
-  cursus_users[ , c(
+  wob[ , c(
     "level",
-    "student",
     "PC1",
     "PC2",
     "PC3")]), digits = 2)
 
-round(cor(cursus_users[ , c(
+round(cor(wob[ , c(
   "level",
   "total_tries",
   "total_attempted",
@@ -93,8 +102,12 @@ round(cor(cursus_users[ , c(
   "achievements_helping",
   "achievements_participation",
   "achievements_cohesion",
-  "student")],
-  cursus_users[ , c(
+  "n_event",
+  "discord_online",
+  "discord_vc",
+  "votes_used",
+  "votes_received")],
+  wob[ , c(
     "level",
     "total_tries",
     "total_attempted",
@@ -106,15 +119,57 @@ round(cor(cursus_users[ , c(
     "achievements_helping",
     "achievements_participation",
     "achievements_cohesion",
-    "student")]), digits = 2)
+    "n_event",
+    "discord_online",
+    "discord_vc",
+    "votes_used",
+    "votes_received")]), digits = 2)
 
 # Across campus and month comparisons of PC1
+### Because main.R only considers May students, student variable should be changed to also include November students
+wob <- wob %>% mutate(student = case_when(is.na(wob$game_1) == TRUE ~ 0,
+                                          is.na(wob$game_1) == FALSE ~ 1))
 
-(pc1_bycampusstudentmonth = cursus_users %>% group_by(campus, student, month) %>% summarise(n = n(), mean = mean(PC1), sd = sd(PC1), min = min(PC1), max = max(PC1)))
+(pc1_bystudentmonth = wob %>% group_by(student, month) %>% summarise(n = n(), mean = mean(PC1), sd = sd(PC1), min = min(PC1), max = max(PC1)))
 
-(p_dot_pc1_bycampuslevelstudent <- ggplot(cursus_users, aes(x = Student, y = PC1))) + 
+(p_dot_pc1_bylevelstudent <- ggplot(wob, aes(x = Student, y = PC1))) + 
   geom_dotplot(binwidth = 0.1, binaxis = 'y', stackdir = 'center') +
   stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", color = "#00BABC", width = 0.8, size = 2, alpha = 0.5) +
   stat_summary(fun = mean, geom = "point", shape = 15, color = "#00BABC", size = 3, alpha = 1) +
   facet_wrap(~ campus + month) +
   theme_minimal()
+
+library(devtools)
+library(ggbiplot)
+
+(wob_pca_biplot1 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
+  groups = as.factor(wob$accepted), ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Accepted to 42 Wolfsburg') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  theme_minimal())
+
+(wob_pca_biplot2 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
+  groups = as.factor(wob$coldfeet), ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Cold-feet among the Piscine Participants') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  theme_minimal())
+
+(wob_pca_biplot3 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
+  groups = as.factor(wob$inactive), ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Inactive among the Currently Student') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  theme_minimal())
+
+(wob_pca_biplot3 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
+  groups = as.factor(wob$detached), ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Detached among the Accepted') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  geom_vline(xintercept = as.numeric(wob[which(wob$login == "tgerdes"), c("PC1")][1]), color = "black", size = 1, alpha = 0.5) +
+  geom_hline(yintercept = as.numeric(wob[which(wob$login == "tgerdes"), c("PC2")][1]), color = "black", size = 1, alpha = 0.5) +
+  theme_minimal())
+
+as.numeric(wob[which(wob$login == "mbarut"), c("PC1")][1])
+as.numeric(wob[which(wob$login == "mbarut"), c("PC2")][1])
+
+wob[which(wob$PC1 > 3.592295 & wob$PC2 < -0.4091407 ), "login"]
+as.numeric(wob[which(wob$login == "tgerdes"), c("PC1")][1])

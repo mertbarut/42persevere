@@ -1,31 +1,43 @@
-#Libraries
+# Libraries
 library(psych)
 library(dplyr)
 library(ggplot2)
+library(devtools)
+library(ggbiplot)
+
+# Import Data
+
+rm(wob)
+
+wob = read.csv("data/csv/wob.csv")
 
 # Select the relevant data
 
-data_pca1 <- wob %>% select("level",
-                                    "total_tries",
-                                    "total_attempted",
-                                    "total_validated",
-                                    "n_evaluation",
-                                    "avg_level_of_peers",
-                                    "achievements_activity",
-                                    "achievements_progression",
-                                    "achievements_helping",
-                                    "achievements_participation",
-                                    "achievements_cohesion",
-                                    "n_event",
-                                    "discord_online",
-                                    "discord_vc",
-                                    "votes_used",
-                                    "votes_received")
+data_pca1 <- wob %>%
+  dplyr::select("level", "total_tries", "total_attempted", "total_validated", "n_evaluation", "avg_level_of_peers", "achievements_progression",
+         "achievements_activity", "achievements_participation", "n_event", "achievements_cohesion", "discord_online", "discord_vc", "votes_used",
+         "achievements_helping", "votes_received") %>%
+  dplyr::rename("(BP) Basecamp Level" = level,
+         "(BP) Tries" = total_tries,
+         "(BP) Attempts" = total_attempted,
+         "(BP) Passes" = total_validated,
+         "(BE) Evaluations" = n_evaluation,
+         "(BE) Average Peer Level" = avg_level_of_peers,
+         "(BA) Steady Progress" = achievements_progression,
+         "(BA) Intranet Activity" = achievements_activity,
+         "(BA) Participation" = achievements_participation,
+         "(BX) Events" = n_event,
+         "(BA) High Cohesion Tribe" = achievements_cohesion,
+         "(BX) Discord Online" = discord_online,
+         "(BX) Discord VC" = discord_vc,
+         "(BX) Vox Votes Cast" = votes_used,
+         "(BA) Vox Awardee" = achievements_helping,
+         "(BX) Vox Votes Received" = votes_received
+  )
 
 # PCA
 
 wob.pca1 <- prcomp(data_pca1, center = TRUE, scale. = TRUE)
-wob.pca1
 
 # Bind the components back with org. data
 
@@ -34,6 +46,13 @@ wob <- cbind(wob, wob.pca1$x[, 1:(ncol(data_pca1))])
 # Summary
 
 summary(wob.pca1)
+
+# Reformatting variables for visuals
+
+wob$"(SC) Accepted" <- as.factor(wob$accepted)
+wob$"(SC) Coldfeet" <- as.factor(wob$coldfeet)
+wob$"(SC) Inactive" <- as.factor(wob$inactive)
+wob$"(SC) Detached" <- as.factor(wob$detached)
 
 # Extract the explained total variance from all variables
 
@@ -49,18 +68,66 @@ var_explained_df %>%
   geom_line() +
   theme_minimal()  +
   theme(text = element_text(size = 12,  family = "Courier New"), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1)) +
-  labs(title = "Scree plot: PCA on scaled data", x = "Principal Components", y = "Explained Variance") +
+  labs(title = "Scree plot: PCA on scaled data", x = "Principal Components (PC)", y = "Explained Variance") +
   ylim(0, 1)
-
-ggplot(wob, aes(PC1, PC2, col = Student, fill = Student)) +
-  stat_ellipse(geom = "polygon", col = "black", alpha = 0.5) +
-  geom_point(shape = 21, col = "black") +
-  facet_wrap(~ campus + month) +
-  theme_minimal()
 
 # Convert type of student to dummy for cor. table
 
 wob$student <- as.numeric(as.factor(wob$Student)) - 1
+
+# Biplots
+
+(wob_pca_biplot1 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
+  groups = wob$`(SC) Accepted`, ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Accepted to 42 Wolfsburg') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  xlim(-8, 8) +
+  ylim(-3, 5) +
+  theme_minimal())
+
+##### Remove non-accepted
+{
+  wob.pca2 <- wob.pca1
+  wob.pca2$x <- wob.pca2$x[which(!is.na(wob$`(SC) Coldfeet`)), ]
+
+  (wob_pca_biplot2 = ggbiplot(wob.pca2, obs.scale = 1, var.scale = 1,
+  groups = na.omit(wob$`(SC) Coldfeet`), ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Cold-feetedness among the Accepted') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  xlim(-8, 8) +
+  ylim(-3, 5) +
+  theme_minimal())
+
+  (wob_pca_biplot3 = ggbiplot(wob.pca2, obs.scale = 1, var.scale = 1,
+  groups = na.omit(wob$`(SC) Detached`), ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Detached among the Accepted') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  geom_vline(xintercept = as.numeric(wob[which(wob$login == "mbarut"), c("PC1")][1]), color = "black", size = 1, alpha = 0.5) +
+  geom_hline(yintercept = as.numeric(wob[which(wob$login == "mbarut"), c("PC2")][1]), color = "black", size = 1, alpha = 0.5) +
+  xlim(-8, 8) +
+  ylim(-3, 5) +
+  theme_minimal())
+}
+
+{
+  wob.pca3 <- wob.pca1
+  wob.pca3$x <- wob.pca3$x[which(wob$Student == "Yes"), ]
+  
+  (wob_pca_biplot3 = ggbiplot(wob.pca3, obs.scale = 1, var.scale = 1,
+  groups = wob[which(wob$Student == "Yes"), ]$`(SC) Inactive`, ellipse = TRUE, circle = TRUE) +
+  scale_color_discrete(name = 'Inactive among the Currently Student') +
+  theme(legend.direction = 'horizontal', legend.position = 'top') +
+  xlim(-8, 8) +
+  ylim(-3, 5) +
+  theme_minimal())
+
+}
+
+as.numeric(wob[which(wob$login == "mwen"), c("PC1")][1])
+as.numeric(wob[which(wob$login == "mwen"), c("PC2")][1])
+
+wob[which(wob$PC1 > 3.592295 & wob$PC2 < -0.4091407 ), "login"]
+as.numeric(wob[which(wob$login == "tgerdes"), c("PC1")][1])
 
 # Calculate rounded correlation coeffiecients between the components and other variables
 
@@ -124,52 +191,3 @@ round(cor(wob[ , c(
     "discord_vc",
     "votes_used",
     "votes_received")]), digits = 2)
-
-# Across campus and month comparisons of PC1
-### Because main.R only considers May students, student variable should be changed to also include November students
-wob <- wob %>% mutate(student = case_when(is.na(wob$game_1) == TRUE ~ 0,
-                                          is.na(wob$game_1) == FALSE ~ 1))
-
-(pc1_bystudentmonth = wob %>% group_by(student, month) %>% summarise(n = n(), mean = mean(PC1), sd = sd(PC1), min = min(PC1), max = max(PC1)))
-
-(p_dot_pc1_bylevelstudent <- ggplot(wob, aes(x = Student, y = PC1))) + 
-  geom_dotplot(binwidth = 0.1, binaxis = 'y', stackdir = 'center') +
-  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", color = "#00BABC", width = 0.8, size = 2, alpha = 0.5) +
-  stat_summary(fun = mean, geom = "point", shape = 15, color = "#00BABC", size = 3, alpha = 1) +
-  facet_wrap(~ campus + month) +
-  theme_minimal()
-
-library(devtools)
-library(ggbiplot)
-
-(wob_pca_biplot1 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
-  groups = as.factor(wob$accepted), ellipse = TRUE, circle = TRUE) +
-  scale_color_discrete(name = 'Accepted to 42 Wolfsburg') +
-  theme(legend.direction = 'horizontal', legend.position = 'top') +
-  theme_minimal())
-
-(wob_pca_biplot2 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
-  groups = as.factor(wob$coldfeet), ellipse = TRUE, circle = TRUE) +
-  scale_color_discrete(name = 'Cold-feet among the Piscine Participants') +
-  theme(legend.direction = 'horizontal', legend.position = 'top') +
-  theme_minimal())
-
-(wob_pca_biplot3 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
-  groups = as.factor(wob$inactive), ellipse = TRUE, circle = TRUE) +
-  scale_color_discrete(name = 'Inactive among the Currently Student') +
-  theme(legend.direction = 'horizontal', legend.position = 'top') +
-  theme_minimal())
-
-(wob_pca_biplot3 = ggbiplot(wob.pca1, obs.scale = 1, var.scale = 1,
-  groups = as.factor(wob$detached), ellipse = TRUE, circle = TRUE) +
-  scale_color_discrete(name = 'Detached among the Accepted') +
-  theme(legend.direction = 'horizontal', legend.position = 'top') +
-  geom_vline(xintercept = as.numeric(wob[which(wob$login == "tgerdes"), c("PC1")][1]), color = "black", size = 1, alpha = 0.5) +
-  geom_hline(yintercept = as.numeric(wob[which(wob$login == "tgerdes"), c("PC2")][1]), color = "black", size = 1, alpha = 0.5) +
-  theme_minimal())
-
-as.numeric(wob[which(wob$login == "mbarut"), c("PC1")][1])
-as.numeric(wob[which(wob$login == "mbarut"), c("PC2")][1])
-
-wob[which(wob$PC1 > 3.592295 & wob$PC2 < -0.4091407 ), "login"]
-as.numeric(wob[which(wob$login == "tgerdes"), c("PC1")][1])

@@ -1008,10 +1008,11 @@ cursus_users = left_join(cursus_users, extra_cur, by = c("login"))
   cursus_users[which(cursus_users$login == "mkazhyba"), "Student"] = "No"
   
   cursus_users <- cursus_users %>% mutate(coldfeet = case_when(
-    cursus_users$login %in% extra_accepted$login == TRUE ~ 1))
-  cursus_users$coldfeet[is.na(cursus_users$coldfeet)] <- 0
+    cursus_users$login %in% extra_accepted$login & cursus_users$Student == "No" ~ 1,
+    !(cursus_users$login %in% extra_accepted$login) & cursus_users$Student == "Yes" ~ 0))
   cursus_users <- cursus_users %>% mutate(accepted = case_when(cursus_users$coldfeet == 1 | cursus_users$Student == "Yes" ~ 1,
                                                                !(cursus_users$coldfeet == 1 | cursus_users$Student == "Yes") ~ 0))
+  cursus_users[is.na(cursus_users$accepted), "accepted"] = 0
   cursus_users <- cursus_users %>% mutate(inactive = case_when((cursus_users$cur == 0) & cursus_users$Student == "Yes" ~ 1,
                                                                cursus_users$cur > 0 & cursus_users$Student == "Yes" ~ 0))
   cursus_users <- cursus_users %>% mutate(detached = case_when(cursus_users$inactive == 1 | cursus_users$coldfeet == 1 ~ 1,
@@ -1021,5 +1022,92 @@ cursus_users = left_join(cursus_users, extra_cur, by = c("login"))
 ####### Subsetting
 wob <- subset(cursus_users, campus == "Wolfsburg")
 
+####### Wob mutates
+
+wob <- wob %>% mutate(edu_3 = case_when(wob$edu == 3 ~ 1,
+                                        !(wob$edu == 3) ~ 0))
+
+wob <- wob %>% mutate(enthusiasm = case_when(wob$prev_exp == 1 ~ 1,
+                                             !(wob$prev_exp == 1) ~ 0))
+
+wob <- wob %>% mutate(game_1scaled = scale(game_1),
+                      game_2scaled = scale(game_2))
+
+wob <- wob %>% mutate(latestart = case_when(wob$kickOff == "May" ~ 0,
+                                                wob$kickOff == "November" ~ 1,
+                                                is.na(wob$kickOff) == TRUE ~ 0))
+
+wob <- wob %>% mutate(blackholed = case_when(wob$absorbed == 1 ~ 1,
+                                             wob$accepted == 1 & is.na(wob$absorbed) == TRUE ~ 0))
+
+wob$cur[is.na(wob$cur)] <- 0
+wob$mid[is.na(wob$mid)] <- 0
+
+wob$progress = wob$cur - wob$mid
+
+####### Environment cleanup
+
+rm(a00, c00, c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11, c12, c13, e00, e01, e02, r00, r01, s00, s01)
+rm(wolfsburg_students, wolfsburg_students_id, wolfsburg_users)
+rm(heilbronn_students, heilbronn_students_id, heilbronn_users)
+rm(achievements,
+   achievements_users_330,
+   achievements_users_331,
+   achievements_users_332,
+   achievements_users_333,
+   achievements_users_334,
+   achievements_users_335,
+   achievements_users_336,
+   achievements_users_337,
+   achievements_users_338,
+   achievements_users_339,
+   achievements_users_340,
+   achievements_users_341,
+   achievements_users_342,
+   achievements_users_343,
+   achievements_users_344,
+   achievements_users_345,
+   achievements_users_347,
+   achievements_users_348,
+   achievements_users_353,
+   achievements_users_354,
+   achievements_users_355,
+   achievements_users_356,
+   achievements_users_357,
+   achievements_users_358,
+   achievements_users_359,
+   achievements_users_360,
+   achievements_users_361,
+   achievements_users_362,
+   achievements_users_363,
+   achievements_users_364,
+   achievements_users_365,
+   achievements_users_366,
+   achievements_users_367,
+   achievements_users_368,
+   achievements_users_369,
+   achievements_users_374,
+   achievements_users_375,
+   achievements_users_376,
+   achievements_users_438)
+rm(c00_peers_01, c00_peers_02, c00_peers_03, c00_peers_04, c00_peers_05, c00_peers_06, c00_peers_07, c00_peers_08, c00_peers_09, c00_peers_10, c00_peers_11, c00_peers_12)
+rm(c01_peers_01, c01_peers_02, c01_peers_03, c01_peers_04, c01_peers_05, c01_peers_06, c01_peers_07, c01_peers_08, c01_peers_09, c01_peers_10, c01_peers_11, c01_peers_12)
+rm(c02_peers_01, c02_peers_02, c02_peers_03, c02_peers_04, c02_peers_05, c02_peers_06, c02_peers_07, c02_peers_08, c02_peers_09, c02_peers_10, c02_peers_11, c02_peers_12, c02_peers_13, c02_peers_14, c02_peers_15, c02_peers_16)
+rm(c03_peers_01, c03_peers_02, c03_peers_03, c03_peers_04, c03_peers_05, c03_peers_06, c03_peers_07, c03_peers_08, c03_peers_09, c03_peers_10)
+rm(c04_peers_01, c04_peers_02, c04_peers_03, c04_peers_04, c04_peers_05, c04_peers_06, c04_peers_07, c04_peers_08)
+rm(c05_peers_01, c05_peers_02, c05_peers_03, c05_peers_04, c05_peers_05, c05_peers_06, c05_peers_07, c05_peers_08, c05_peers_09, c05_peers_10)
+rm(c06_peers_01, c06_peers_02, c06_peers_03, c06_peers_04, c06_peers_05, c06_peers_06)
+rm(c07_peers_01, c07_peers_02, c07_peers_03, c07_peers_04, c07_peers_05, c07_peers_06, c07_peers_07, c07_peers_08)
+rm(c08_peers_01, c08_peers_02, c08_peers_03, c08_peers_04, c08_peers_05, c08_peers_06, c08_peers_07, c08_peers_08, c08_peers_09, c08_peers_10, c08_peers_11, c08_peers_12)
+rm(c09_peers_01, c09_peers_02, c09_peers_03, c09_peers_04, c09_peers_05, c09_peers_06, c09_peers_07, c09_peers_08)
+rm(c10_peers_01, c10_peers_02)
+rm(c11_peers_01, c11_peers_02)
+rm(s00_peers_01, s00_peers_02, s00_peers_03, s00_peers_04, s00_peers_05, s00_peers_06, s00_peers_07, s00_peers_08, s00_peers_09, s00_peers_10, s00_peers_11, s00_peers_12, s00_peers_13, s00_peers_14, s00_peers_15, s00_peers_16)
+rm(s01_peers_01, s01_peers_02, s01_peers_03, s01_peers_04, s01_peers_05, s01_peers_06, s01_peers_07, s01_peers_08, s01_peers_09, s01_peers_10, s01_peers_11, s01_peers_12, s01_peers_13, s01_peers_14)
+rm(evaluations, peers)
+rm(extra_accepted, extra_cur, extra_discord, extra_education, extra_games, extra_gender, extra_n_event, extra_prev_exp, extra_vox)
+rm(i)
+
 # Export as .csv
 write.csv(cursus_users, "data/csv/data_complete.csv", row.names = FALSE)
+write.csv(wob, "data/csv/wob.csv", row.names = FALSE)
